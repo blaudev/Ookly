@@ -5,10 +5,13 @@ VisualStudioVersion = 17.8.34112.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{81D56CBE-A866-4CD1-90EE-8B2B9884458C}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ookly.Web", "src\Ookly.Web\Ookly.Web.csproj", "{656AFB01-1AE2-4614-B0A0-FABD1CC59267}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ookly.Web", "src\Ookly.Web\Ookly.Web.csproj", "{656AFB01-1AE2-4614-B0A0-FABD1CC59267}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{43DC8A66-1DA1-4D14-A3E4-F08D2E51614A}"
 EndProject
