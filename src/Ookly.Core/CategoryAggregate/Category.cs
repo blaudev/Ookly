@@ -1,17 +1,11 @@
-﻿using Ookly.Core.AdAggregate;
+﻿using Blau.Entities;
+
+using Ookly.Core.AdAggregate;
 
 namespace Ookly.Core.CategoryAggregate;
 
-public class Category
+public class Category(string name) : Entity<int>, IAggregateRoot
 {
-    private Category() { }
-
-    public Category(string name)
-    {
-        Name = name;
-    }
-
-    public int Id { get; private set; }
-    public string Name { get; private set; } = default!;
+    public string Name { get; private set; } = name;
     public IReadOnlyList<Ad> Ads { get; private set; } = default!;
 }

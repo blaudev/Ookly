@@ -15,9 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ookly.Web", "src\Ookly.Web\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{43DC8A66-1DA1-4D14-A3E4-F08D2E51614A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ookly.Infrastructure", "src\Ookly.Infrastructure\Ookly.Infrastructure.csproj", "{2347477F-C61F-4B8B-8103-3AFD9CB7AC93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ookly.Infrastructure", "src\Ookly.Infrastructure\Ookly.Infrastructure.csproj", "{2347477F-C61F-4B8B-8103-3AFD9CB7AC93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ookly.Core", "src\Ookly.Core\Ookly.Core.csproj", "{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ookly.Core", "src\Ookly.Core\Ookly.Core.csproj", "{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{805C6A28-B5F4-4556-9FE2-5FF535BA84B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blau", "..\blau\src\Blau\Blau.csproj", "{A866405F-040C-427B-9804-56712E700369}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,10 @@ Global
 		{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A866405F-040C-427B-9804-56712E700369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A866405F-040C-427B-9804-56712E700369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A866405F-040C-427B-9804-56712E700369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A866405F-040C-427B-9804-56712E700369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,7 @@ Global
 		{656AFB01-1AE2-4614-B0A0-FABD1CC59267} = {43DC8A66-1DA1-4D14-A3E4-F08D2E51614A}
 		{2347477F-C61F-4B8B-8103-3AFD9CB7AC93} = {43DC8A66-1DA1-4D14-A3E4-F08D2E51614A}
 		{6A78E01D-C18E-4832-89CC-DBD2EBB0C05A} = {43DC8A66-1DA1-4D14-A3E4-F08D2E51614A}
+		{A866405F-040C-427B-9804-56712E700369} = {805C6A28-B5F4-4556-9FE2-5FF535BA84B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A72BEEA2-6E6C-41D9-B950-750B1E32584F}

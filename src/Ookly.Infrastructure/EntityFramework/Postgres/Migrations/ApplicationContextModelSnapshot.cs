@@ -36,7 +36,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Ads");
+                    b.ToTable("Ads", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.CategoryAggregate.Category", b =>
@@ -57,7 +57,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.AdAggregate.Ad", b =>
