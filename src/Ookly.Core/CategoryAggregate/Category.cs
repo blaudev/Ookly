@@ -4,6 +4,14 @@ namespace Ookly.Core.CategoryAggregate;
 
 public class Category
 {
-    public int Id { get; init; }
-    public IReadOnlyList<Ad> Ads { get; init; } = [];
+    private Category() { }
+
+    public Category(string name)
+    {
+        Name = name;
+    }
+
+    public int Id { get; private set; }
+    public string Name { get; private set; } = default!;
+    public IReadOnlyList<Ad> Ads { get; private set; } = default!;
 }
