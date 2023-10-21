@@ -1,6 +1,4 @@
-﻿using Blau.Entities;
-
-using Ookly.Core.AdAggregate;
+﻿using Ookly.Core.AdAggregate;
 using Ookly.Core.CountryAggregate;
 
 namespace Ookly.Core.CategoryAggregate;

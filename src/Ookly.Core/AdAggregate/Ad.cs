@@ -1,5 +1,4 @@
-﻿using Blau.Entities;
-
+﻿
 using Ookly.Core.CategoryAggregate;
 
 namespace Ookly.Core.AdAggregate;
