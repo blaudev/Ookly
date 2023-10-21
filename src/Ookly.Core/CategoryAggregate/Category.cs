@@ -12,12 +12,12 @@ public class Category(string name) : Entity, IAggregateRoot
     public List<Country> Countries { get; private set; } = default!;
     public IReadOnlyList<Ad> Ads { get; private set; } = default!;
 
-    public void addCountry(Country country)
+    public void AddCountry(Country country)
     {
         Countries.Add(country);
     }
 
-    public void addCountries(IEnumerable<Country> countries)
+    public void AddCountries(IEnumerable<Country> countries)
     {
         Countries.AddRange(countries);
     }
