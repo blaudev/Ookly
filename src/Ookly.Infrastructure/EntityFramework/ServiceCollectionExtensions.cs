@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
         {
             "InMemory" => new(options => options.UseInMemoryDatabase("OoklyDb")),
             _ => new(options => options.UseNpgsql(configuration.GetConnectionString("OoklyDb")))
-        }
+        };
 
         services.AddDbContext<ApplicationContext>(options);
 
