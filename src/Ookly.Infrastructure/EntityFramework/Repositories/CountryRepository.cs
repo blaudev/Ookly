@@ -4,18 +4,11 @@ using Ookly.Core.CountryAggregate;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class CountryRepository : ICountryRepository
+public class CountryRepository(ApplicationContext context) : ICountryRepository
 {
-    private readonly ApplicationContext _context;
-
-    public CountryRepository(ApplicationContext context)
-    {
-        _context = context;
-    }
-
     public async Task<List<Country>> GetCountryStatsAsync()
     {
-        return await _context.Countries
+        return await context.Countries
             .Include(i => i.Categories)
             .ToListAsync();
     }
