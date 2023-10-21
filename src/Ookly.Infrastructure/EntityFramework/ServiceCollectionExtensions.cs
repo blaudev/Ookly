@@ -9,20 +9,13 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddEntityFramework(this IServiceCollection services, IConfiguration configuration)
     {
-        if (configuration.GetSection("Database").GetSection("DatabaseType").Value == "InMemory")
+        Action<DbContextOptionsBuilder> options = configuration["Database:DatabaseType"] switch
         {
-            services.AddDbContext<ApplicationContext>(options =>
-            {
-                options.UseInMemoryDatabase("OoklyDb");
-            });
+            "InMemory" => new(options => options.UseInMemoryDatabase("OoklyDb")),
+            _ => new(options => options.UseNpgsql(configuration.GetConnectionString("OoklyDb")))
         }
-        else
-        {
-            services.AddDbContext<ApplicationContext>(options =>
-            {
-                options.UseNpgsql(configuration.GetConnectionString("OoklyDb"));
-            });
-        }
+
+        services.AddDbContext<ApplicationContext>(options);
 
         return services;
     }
