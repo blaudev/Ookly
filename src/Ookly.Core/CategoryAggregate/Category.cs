@@ -5,7 +5,7 @@ using Ookly.Core.CountryAggregate;
 
 namespace Ookly.Core.CategoryAggregate;
 
-public class Category(string name) : Entity, IAggregateRoot
+public class Category(Guid id, string name) : Entity(id), IAggregateRoot
 {
     public string Name { get; private set; } = name;
 

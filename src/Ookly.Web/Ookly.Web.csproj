@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ookly.Infrastructure\Ookly.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ookly.UseCases\Ookly.UseCases.csproj" />
   </ItemGroup>
 
 </Project>
