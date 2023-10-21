@@ -8,11 +8,10 @@ using System.Reflection;
 
 namespace Ookly.Infrastructure.EntityFramework;
 
-public class ApplicationContext : DbContext
+public class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options)
 {
-    public ApplicationContext() { }
-
-    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
+    // EntityFramework required constructor
+    public ApplicationContext() : this(default!) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
