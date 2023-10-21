@@ -17,7 +17,7 @@ public record Country(string Name, IReadOnlyCollection<Category> Categories)
 
 public record Category(string Name)
 {
-    public static Category Map(Core.CategoryAggregate.Category category)
+    public static Category Map(Core.CountryAggregate.Category category)
     {
         return new Category(category.Name);
     }

@@ -1,6 +1,8 @@
-﻿namespace Ookly.Core.CountryAggregate;
+﻿using Ookly.Core.Interfaces;
 
-public interface ICountryRepository
+namespace Ookly.Core.CountryAggregate;
+
+public interface ICountryRepository : IRepository<Country>
 {
     Task<List<Country>> GetCountryStatsAsync();
 }

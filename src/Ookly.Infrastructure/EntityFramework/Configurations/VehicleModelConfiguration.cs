@@ -1,18 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ookly.Core.CountryAggregate;
+
+using Ookly.Core.VehicleBrandAggregate;
 
 namespace Ookly.Infrastructure.EntityFramework.Configurations;
 
-public class ContributorConfiguration : IEntityTypeConfiguration<Category>
+public class VehicleModelConfiguration : IEntityTypeConfiguration<VehicleModel>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<VehicleModel> builder)
     {
         builder.Property(p => p.Name)
-            .HasMaxLength(20)
+            .HasMaxLength(50)
             .IsRequired();
 
         builder.HasIndex(p => p.Name)
             .IsUnique();
     }
 }
+

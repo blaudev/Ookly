@@ -4,7 +4,7 @@ using Ookly.Core.CountryAggregate;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class CountryRepository(ApplicationContext context) : ICountryRepository
+public class CountryRepository(ApplicationContext context) : Repository<Country>(context), ICountryRepository
 {
     public async Task<List<Country>> GetCountryStatsAsync()
     {

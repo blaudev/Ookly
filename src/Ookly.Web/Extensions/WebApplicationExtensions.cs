@@ -1,4 +1,4 @@
-﻿using Ookly.Infrastructure.EntityFramework;
+﻿using Ookly.Web.Services;
 
 namespace Microsoft.AspNetCore.Builder;
 
@@ -7,9 +7,8 @@ public static class WebApplicationExtensions
     public static WebApplication SeedTestData(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-        context.Database.EnsureCreated();
-        context.SeedTestData();
+        var service = scope.ServiceProvider.GetRequiredService<SeedTestDataService>();
+        service.SeedAsync().Wait();
 
         return app;
     }

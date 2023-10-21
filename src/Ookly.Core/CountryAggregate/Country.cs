@@ -1,6 +1,4 @@
-﻿using Ookly.Core.CategoryAggregate;
-
-namespace Ookly.Core.CountryAggregate;
+﻿namespace Ookly.Core.CountryAggregate;
 
 public class Country(Guid id, string name) : Entity(id), IAggregateRoot
 {

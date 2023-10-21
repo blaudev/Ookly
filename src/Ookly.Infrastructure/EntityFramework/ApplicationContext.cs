@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using Ookly.Core.AdAggregate;
-using Ookly.Core.CategoryAggregate;
 using Ookly.Core.CountryAggregate;
+using Ookly.Core.VehicleBrandAggregate;
 
 using System.Reflection;
 
@@ -22,10 +22,12 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     public virtual DbSet<Ad> Ads => Set<Ad>();
     public virtual DbSet<Category> Categories => Set<Category>();
     public virtual DbSet<Country> Countries => Set<Country>();
+    public virtual DbSet<VehicleBrand> VehicleBrands => Set<VehicleBrand>();
+    public virtual DbSet<VehicleModel> VehicleModels => Set<VehicleModel>();
 
-    private Category _vehiclesCategory = new(Guid.NewGuid(), "Vehicles");
-    private Category _realEstateCategory = new(Guid.NewGuid(), "Real Estate");
-    private Country _chileCountry = new(Guid.NewGuid(), "Chile");
+    private static Category _vehiclesCategory = new(Guid.NewGuid(), "Vehicles");
+    private static Category _realEstateCategory = new(Guid.NewGuid(), "Real Estate");
+    private static Country _chile = new(Guid.NewGuid(), "Chile");
 
     public void SeedTestData()
     {
@@ -33,7 +35,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         SeedCountries();
     }
 
-    public void SeedCategories()
+    private void SeedCategories()
     {
         if (Categories.Any())
         {
@@ -46,16 +48,16 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         SaveChanges();
     }
 
-    public void SeedCountries()
+    private void SeedCountries()
     {
         if (Countries.Any())
         {
             return;
         }
 
-        _chileCountry.AddCategories([_vehiclesCategory, _realEstateCategory]);
+        _chile.AddCategories([_vehiclesCategory, _realEstateCategory]);
 
-        Countries.Add(_chileCountry);
+        Countries.Add(_chile);
 
         SaveChanges();
     }
