@@ -8,6 +8,11 @@ public record Country(string Name, IReadOnlyCollection<Category> Categories)
     {
         return new Country(country.Name, country.Categories.Select(Category.Map).ToList());
     }
+
+    public static List<Country> Map(List<Core.CountryAggregate.Country> countries)
+    {
+        return countries.Select(Map).ToList();
+    }
 }
 
 public record Category(string Name)
