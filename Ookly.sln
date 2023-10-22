@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blau", "..\blau\src\Blau\Blau.csproj", "{A866405F-040C-427B-9804-56712E700369}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ookly.UseCases", "src\Ookly.UseCases\Ookly.UseCases.csproj", "{3F7D0822-E45D-4F05-B570-FC2DDA948BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ookly.UseCases", "src\Ookly.UseCases\Ookly.UseCases.csproj", "{3F7D0822-E45D-4F05-B570-FC2DDA948BCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

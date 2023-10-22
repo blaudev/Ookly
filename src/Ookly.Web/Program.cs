@@ -15,7 +15,7 @@ builder.Services.AddScoped<SeedTestDataService>();
 
 builder.Services.AddScoped<GetCountryStatsHandler>();
 
-builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -35,6 +35,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Home}/{id?}");
 
 app.Run();
