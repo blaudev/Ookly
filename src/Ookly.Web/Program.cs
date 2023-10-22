@@ -1,7 +1,8 @@
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
 using Ookly.Infrastructure.EntityFramework.Repositories;
-using Ookly.UseCases.GetCountryStats;
+using Ookly.UseCases.HomeUseCase;
+using Ookly.UseCases.SearchAd;
 using Ookly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,8 @@ builder.Services.AddScoped<IVehicleBrandRepository, VehicleBrandRepository>();
 
 builder.Services.AddScoped<SeedTestDataService>();
 
-builder.Services.AddScoped<GetCountryStatsHandler>();
+builder.Services.AddScoped<HomeUseCaseHandler>();
+builder.Services.AddSingleton<SearchAdUseCaseHandler>();
 
 builder.Services.AddControllersWithViews();
 
