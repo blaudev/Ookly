@@ -1,6 +1,8 @@
-﻿namespace Ookly.UseCases.GetCountryStats;
+﻿using Blau.UseCases;
 
-public record GetCountryStatsResponse(List<Country> Countries);
+namespace Ookly.UseCases.HomeUseCase;
+
+public record HomeUseCaseResponse(List<Country> Countries) : IUseCaseResponse;
 
 public record Country(string Name, IReadOnlyCollection<Category> Categories)
 {

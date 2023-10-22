@@ -1,14 +1,9 @@
-﻿using Ookly.UseCases.GetCountryStats;
-using Ookly.Web.ViewModels;
+﻿using Ookly.UseCases.HomeUseCase;
 
 namespace Ookly.Web.Controllers;
 
-public class HomeController(GetCountryStatsHandler getCountryStatsHandler) : Controller
+public class HomeController(HomeUseCaseHandler useCase) : Controller
 {
-    public async Task<IActionResult> Home()
-    {
-        var countries = (await getCountryStatsHandler.HandleAsync()).Countries;
-        var model = new HomeViewModel(countries);
-        return View(model);
-    }
+    public async Task<IActionResult> Home() =>
+        View(await useCase.HandleAsync());
 }
