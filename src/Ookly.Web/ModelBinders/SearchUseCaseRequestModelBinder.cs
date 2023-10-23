@@ -6,14 +6,14 @@ namespace Ookly.Web.ModelBinders;
 
 public class SearchUseCaseRequestModelBinder : IModelBinder
 {
-    private static readonly string[] filterNames = ["VehicleBrand"];
+    private static readonly string[] filterNames = ["VehicleBrand", "VehicleModel"];
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        var countryName = bindingContext.ValueProvider.GetValue("countryName").FirstValue ?? string.Empty;
-        var categoryName = bindingContext.ValueProvider.GetValue("categoryName").FirstValue ?? string.Empty;
+        var countryName = bindingContext.ValueProvider.GetValue("CountryName").FirstValue ?? string.Empty;
+        var categoryName = bindingContext.ValueProvider.GetValue("CategoryName").FirstValue ?? string.Empty;
         var filters = GetFilters(bindingContext);
 
         bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryName, categoryName, filters));

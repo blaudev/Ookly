@@ -10,7 +10,7 @@ public record SearchUseCaseResponse(
     long AdCount,
     Ad[] Ads) : IUseCaseResponse;
 
-public record Facet(string Name, string FilterName, string FilterValue, List<FacetItem> Items);
+public record Facet(string Name, string FilterName, List<FacetItem> Items);
 
 public record FacetItem(string Text, string Value);
 

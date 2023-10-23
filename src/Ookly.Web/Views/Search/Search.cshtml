@@ -63,7 +63,7 @@
                                 @foreach(var option in facet.Items)
                                 {
                                     <div class="option">
-                                        @if (option.Value == facet.FilterValue)
+                                        @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
                                         {
                                             <option value="@option.Value" selected>@option.Text</option>
                                         }
