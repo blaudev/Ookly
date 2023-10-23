@@ -17,6 +17,8 @@ builder.Services.AddScoped<SeedTestDataService>();
 builder.Services.AddScoped<HomeUseCaseHandler>();
 builder.Services.AddScoped<SearchUseCaseHandler>();
 
+builder.Services.AddScoped<IFacetService, FacetService>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

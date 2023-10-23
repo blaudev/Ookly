@@ -6,7 +6,7 @@ namespace Ookly.Web.ModelBinders;
 
 public class SearchUseCaseRequestModelBinder : IModelBinder
 {
-    private static readonly string[] filterNames = ["VehicleBrand", "VehicleModel"];
+    private static readonly string[] filterNames = ["VehicleBrand", "VehicleModel", "VehicleYear", "VehicleMileage", "VehicleFuelType", "VehicleColor"];
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
