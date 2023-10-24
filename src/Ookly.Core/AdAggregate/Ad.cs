@@ -1,12 +1,81 @@
 ﻿using Ookly.Core.CountryAggregate;
+using Ookly.Core.VehicleBrandAggregate;
 
 namespace Ookly.Core.AdAggregate;
 
-public class Ad(string title, string description, Guid categoryId) : Entity, IAggregateRoot
+public enum AdStatus
 {
-    public string Title { get; private set; } = title;
-    public string Description { get; private set; } = description;
+    Pending = 1,
+    Updating,
+    Active,
+    Error
+};
+
+public class Ad(
+    AdStatus status,
+    Guid categoryId,
+    string sourceUrl,
+    string title,
+    string pictureUrl,
+    string? description,
+    long price,
+    Guid countryId,
+    string? state,
+    string? city,
+    Guid? vehicleBrand,
+    Guid? vehicleModel,
+    int? vehicleYear,
+    int? vehicleMileage,
+    string? vehicleFuelType,
+    string? vehicleColor,
+    int? surface,
+    int? bedrooms,
+    int? bathrooms,
+    bool? pets,
+    bool? furnished
+    ) : Entity, IAggregateRoot
+{
+    public AdStatus Status { get; private set; } = status;
+
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime? ProcessedAt { get; private set; }
 
     public Guid CategoryId { get; private set; } = categoryId;
     public Category Category { get; private set; } = default!;
+
+    public string SourceUrl { get; private set; } = sourceUrl;
+
+    public string Title { get; private set; } = title;
+    public string PictureUrl { get; private set; } = pictureUrl;
+    public string? Description { get; private set; } = description!;
+
+    public long Price { get; private set; } = price;
+
+    public Guid CountryId { get; private set; } = countryId;
+    public Country Country { get; private set; } = default!;
+
+    public string? State { get; private set; } = state;
+    public string? City { get; private set; } = city;
+
+    public Guid? VehicleBrandId { get; private set; } = vehicleBrand;
+    public VehicleBrand? VehicleBrand { get; private set; }
+
+    public Guid? VehicleModelId { get; private set; } = vehicleModel;
+    public VehicleModel? VehicleModel { get; private set; }
+
+    public int? VehicleYear { get; private set; } = vehicleYear;
+    public int? VehicleMileage { get; private set; } = vehicleMileage;
+    public string? VehicleFuelType { get; private set; } = vehicleFuelType;
+    public string? VehicleColor { get; private set; } = vehicleColor;
+
+    public int? Surface { get; private set; } = surface;
+    public int? Bedrooms { get; private set; } = bedrooms;
+    public int? Bathrooms { get; private set; } = bathrooms;
+    public bool? Pets { get; private set; } = pets;
+    public bool? Furnished { get; private set; } = furnished;
+
+    public void UpdateProcessedAt()
+    {
+        ProcessedAt = DateTime.UtcNow;
+    }
 }
