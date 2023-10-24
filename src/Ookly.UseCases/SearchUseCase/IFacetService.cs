@@ -3,7 +3,7 @@ namespace Ookly.UseCases.SearchUseCase
 {
     public interface IFacetService
     {
-        Facet GetVehicleColors();
+        Facet VehicleColors();
         Task<Facet> VehicleBrandFacetAsync();
         Task<List<Facet>> VehicleFacetsAsync(SearchUseCaseRequest request);
         Facet VehicleFuelTypes();

@@ -11,7 +11,7 @@ public class FacetService(IVehicleBrandRepository vehicleBrandRepository) : IFac
             VehicleYears(),
             VehicleMileage(),
             VehicleFuelTypes(),
-            GetVehicleColors(),
+            VehicleColors(),
         ];
 
         var vehicleBrand = request.Filters.GetValueOrDefault("VehicleBrand");
@@ -71,7 +71,7 @@ public class FacetService(IVehicleBrandRepository vehicleBrandRepository) : IFac
         return new("Combustible", "VehicleFuelType", items);
     }
 
-    public Facet GetVehicleColors()
+    public Facet VehicleColors()
     {
         List<FacetItem> items = [
             new FacetItem("Azul", "Azul"),
