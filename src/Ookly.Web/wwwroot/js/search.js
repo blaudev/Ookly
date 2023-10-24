@@ -2,15 +2,14 @@
     const url = searchUrl(filter);
 
     const data = await fetch(url).then((response) => response.json());
-    console.log(data);
     return data;
 }
 
 function searchUrl(filter) {
     const url = new URL('api/search', window.location.origin);
 
-    url.searchParams.set('countryId', countryId);
-    url.searchParams.set('categoryId', categoryId);
+    url.searchParams.set('countryName', countryName);
+    url.searchParams.set('categoryName', categoryName);
 
     Object.keys(filter).forEach((key) => {
         url.searchParams.set(key, filter[key]);
@@ -42,6 +41,7 @@ function updateOptions(selectElement, items, selectedValue) {
     }
 
     items.forEach((item) => {
+        console.log('item', item)
         const option = new Option(item.text, item.value, false, item.value === selectedValue);
         selectElement.add(option);
     });
@@ -60,32 +60,24 @@ function updateCounter(count) {
 }
 
 async function onChangeFilter() {
-    const filterElements = Array.from(document.querySelectorAll('#filters .filter'));
+    const filterElements = Array.from(document.querySelectorAll('.filters .filter'));
 
     const filter = filterElements.reduce((filter, element) => {
         if (element.value) {
-            filter[element.id] = element.value;
+            filter[element.name] = element.value;
         }
 
         return filter;
     }, {});
 
-    console.log(filter);
     const data = await search(filter);
 
-    const selectIds = filterElements.reduce((ids, element) => {
-        ids.push(element.id);
-        return ids;
-    }, [])
-
-    console.log(selectIds);
-    filterElements.forEach((element) => {
-        const srcKey = element.id.replace('Id', '') + 's';
-        updateSelect(element, data[srcKey]);
+    data.facets.forEach((facet) => {
+        const element = filterElements.find(el => el.name == facet.filterName);
+        updateSelect(element, facet.items);
     });
 
     updateCounter(data.adCount);
-
     updateHistory(filter);
 }
 
@@ -107,6 +99,6 @@ function removeFilters() {
 }
 
 document.querySelector('.filters-button').addEventListener('click', showFiltersDialog)
-document.querySelectorAll('#filters .filter').forEach((filter) => filter.addEventListener('change', onChangeFilter));
+document.querySelectorAll('.filters .filter').forEach((filter) => filter.addEventListener('change', onChangeFilter));
 document.querySelector('.filters-dialog .close-button').addEventListener('click', hideFiltersDialog);
 document.querySelector('.filters-dialog .remove-filters-button').addEventListener('click', removeFilters);

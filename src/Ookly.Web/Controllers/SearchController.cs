@@ -9,3 +9,11 @@ public class SearchController(SearchUseCaseHandler useCase) : Controller
     public async Task<IActionResult> Search([ModelBinder(BinderType = typeof(SearchUseCaseRequestModelBinder))] SearchUseCaseRequest request) =>
         View(await useCase.HandleAsync(request));
 }
+
+[ApiController]
+public class ApiSearchController(SearchUseCaseHandler useCase) : Controller
+{
+    [HttpGet("api/search")]
+    public async Task<SearchUseCaseResponse> Search([ModelBinder(BinderType = typeof(SearchUseCaseRequestModelBinder))] SearchUseCaseRequest request) =>
+        await useCase.HandleAsync(request);
+}

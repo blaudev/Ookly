@@ -15,7 +15,7 @@ public class SearchUseCaseHandler(IFacetService facetService) : IUseCaseHandler<
             _ => throw new ValidationException(nameof(request.CategoryName))
         };
 
-        var response = new SearchUseCaseResponse(request.CountryName, request.CategoryName, request.Filters, facets, 0, []);
+        var response = new SearchUseCaseResponse(request.CountryName, request.CategoryName, request.Filters, facets, 10, []);
         return await Task.FromResult(response);
     }
 }

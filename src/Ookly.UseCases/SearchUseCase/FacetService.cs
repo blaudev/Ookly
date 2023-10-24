@@ -8,17 +8,12 @@ public class FacetService(IVehicleBrandRepository vehicleBrandRepository) : IFac
     {
         List<Facet> facets = [
             await VehicleBrandFacetAsync(),
+            await VehicleModelFacetAsync(request.Filters.GetValueOrDefault("VehicleBrand")),
             VehicleYears(),
             VehicleMileage(),
             VehicleFuelTypes(),
             VehicleColors(),
         ];
-
-        var vehicleBrand = request.Filters.GetValueOrDefault("VehicleBrand");
-        if (!string.IsNullOrEmpty(vehicleBrand))
-        {
-            facets.Insert(1, await VehicleModelFacetAsync(vehicleBrand));
-        }
 
         return facets;
     }
@@ -30,8 +25,13 @@ public class FacetService(IVehicleBrandRepository vehicleBrandRepository) : IFac
         return new("Marca", "VehicleBrand", items);
     }
 
-    public async Task<Facet> VehicleModelFacetAsync(string vehicleBrand)
+    public async Task<Facet> VehicleModelFacetAsync(string? vehicleBrand)
     {
+        if (string.IsNullOrEmpty(vehicleBrand))
+        {
+            return new("Modelo", "VehicleModel", []);
+        }
+
         var brand = (await vehicleBrandRepository.ByNameAsync(vehicleBrand));
         var items = brand.VehicleModels.Select(i => new FacetItem(i.Name, i.Name)).ToList();
         return new("Modelo", "VehicleModel", items);

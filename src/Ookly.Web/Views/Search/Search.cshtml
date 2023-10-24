@@ -6,8 +6,8 @@
 
 @section Scripts {
     <script>
-        const countryId = @Model.CountryName;
-        const categoryId = @Model.CategoryName;
+        const countryName = '@Model.CountryName';
+        const categoryName = '@Model.CategoryName';
     </script>
 
     <script src="~/js/search.js" asp-append-version="true"></script>
@@ -56,7 +56,7 @@
                     {
                         <div class="field">
                             <label>@facet.Name</label>
-                            <select name="@facet.FilterName">
+                            <select class="filter" name="@facet.FilterName">
                                 <div class="option">
                                     <option value="">@facet.Name</option>
                                 </div>
