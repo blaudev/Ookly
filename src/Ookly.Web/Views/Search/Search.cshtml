@@ -57,21 +57,17 @@
                         <div class="field">
                             <label>@facet.Name</label>
                             <select class="filter" name="@facet.FilterName">
-                                <div class="option">
-                                    <option value="">@facet.Name</option>
-                                </div>
+                                <option class="option" value="">@facet.Name</option>
                                 @foreach(var option in facet.Items)
                                 {
-                                    <div class="option">
-                                        @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
-                                        {
-                                            <option value="@option.Value" selected>@option.Text</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@option.Value">@option.Text</option>
-                                        }
-                                    </div>
+                                    @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
+                                    {
+                                        <option class="option" value="@option.Value" selected>@option.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option class="option" value="@option.Value">@option.Text</option>
+                                    }
                                 })
                             </select>
                         </div>

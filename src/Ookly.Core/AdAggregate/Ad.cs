@@ -12,6 +12,7 @@ public enum AdStatus
 };
 
 public class Ad(
+    Guid id,
     AdStatus status,
     Guid categoryId,
     string sourceUrl,
@@ -22,8 +23,8 @@ public class Ad(
     Guid countryId,
     string? state,
     string? city,
-    Guid? vehicleBrand,
-    Guid? vehicleModel,
+    Guid? vehicleBrandId,
+    Guid? vehicleModelId,
     int? vehicleYear,
     int? vehicleMileage,
     string? vehicleFuelType,
@@ -33,8 +34,9 @@ public class Ad(
     int? bathrooms,
     bool? pets,
     bool? furnished
-    ) : Entity, IAggregateRoot
+    ) : Entity<Guid>(id), IAggregateRoot
 {
+
     public AdStatus Status { get; private set; } = status;
 
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
@@ -57,10 +59,10 @@ public class Ad(
     public string? State { get; private set; } = state;
     public string? City { get; private set; } = city;
 
-    public Guid? VehicleBrandId { get; private set; } = vehicleBrand;
+    public Guid? VehicleBrandId { get; private set; } = vehicleBrandId;
     public VehicleBrand? VehicleBrand { get; private set; }
 
-    public Guid? VehicleModelId { get; private set; } = vehicleModel;
+    public Guid? VehicleModelId { get; private set; } = vehicleModelId;
     public VehicleModel? VehicleModel { get; private set; }
 
     public int? VehicleYear { get; private set; } = vehicleYear;
@@ -73,6 +75,11 @@ public class Ad(
     public int? Bathrooms { get; private set; } = bathrooms;
     public bool? Pets { get; private set; } = pets;
     public bool? Furnished { get; private set; } = furnished;
+
+    public void SetActive()
+    {
+        Status = AdStatus.Active;
+    }
 
     public void UpdateProcessedAt()
     {

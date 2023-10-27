@@ -1,6 +1,8 @@
-﻿namespace Ookly.Core.AdAggregate;
+﻿using Ookly.Core.Interfaces;
 
-public interface IAdRepository
+namespace Ookly.Core.AdAggregate;
+
+public interface IAdRepository : IRepository<Ad>
 {
     Task<List<Ad>> SearchAsync(Dictionary<string, string> filters);
 }

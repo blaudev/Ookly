@@ -6,7 +6,7 @@ using Ookly.Core.Interfaces;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class Repository<T>(ApplicationContext context) : IRepository<T> where T : Entity, IAggregateRoot
+public class Repository<T>(ApplicationContext context) : IRepository<T> where T : class, IAggregateRoot
 {
     protected readonly ApplicationContext context = context;
 
@@ -14,9 +14,9 @@ public class Repository<T>(ApplicationContext context) : IRepository<T> where T 
     {
         return await context.Set<T>().AnyAsync();
     }
-    public async Task<T> ByIdAsync(Guid id)
+    public async Task<T?> ByIdAsync(object id)
     {
-        return await context.Set<T>().FirstAsync(x => x.Id == id);
+        return await context.Set<T>().FindAsync(id);
     }
 
     public async Task<List<T>> ListAsync()

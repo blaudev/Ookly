@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231027172745_Ad")]
+    partial class Ad
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,8 +56,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("City")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CountryId")
                         .HasColumnType("uuid");
@@ -73,8 +75,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.Property<string>("PictureUrl")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("text");
 
                     b.Property<long>("Price")
                         .HasColumnType("bigint");
@@ -84,12 +85,10 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.Property<string>("SourceUrl")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("text");
 
                     b.Property<string>("State")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -106,12 +105,10 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("VehicleColor")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("text");
 
                     b.Property<string>("VehicleFuelType")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("text");
 
                     b.Property<int?>("VehicleMileage")
                         .HasColumnType("integer");

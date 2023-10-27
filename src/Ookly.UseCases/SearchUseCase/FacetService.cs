@@ -32,7 +32,7 @@ public class FacetService(IVehicleBrandRepository vehicleBrandRepository) : IFac
             return new("Modelo", "VehicleModel", []);
         }
 
-        var brand = (await vehicleBrandRepository.ByNameAsync(vehicleBrand));
+        var brand = (await vehicleBrandRepository.WithModelsAsync(vehicleBrand));
         var items = brand.VehicleModels.Select(i => new FacetItem(i.Name, i.Name)).ToList();
         return new("Modelo", "VehicleModel", items);
     }
