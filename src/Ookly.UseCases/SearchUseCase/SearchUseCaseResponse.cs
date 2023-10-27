@@ -3,8 +3,8 @@
 namespace Ookly.UseCases.SearchUseCase;
 
 public record SearchUseCaseResponse(
-    string CountryName,
-    string CategoryName,
+    string CountryId,
+    string CategoryId,
     Dictionary<string, string> Filters,
     List<Facet> Facets,
     long AdCount,

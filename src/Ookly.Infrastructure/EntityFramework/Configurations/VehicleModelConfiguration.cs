@@ -9,12 +9,8 @@ public class VehicleModelConfiguration : IEntityTypeConfiguration<VehicleModel>
 {
     public void Configure(EntityTypeBuilder<VehicleModel> builder)
     {
-        builder.Property(p => p.Name)
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.HasIndex(p => p.Name)
-            .IsUnique();
+        builder.Property(p => p.Id)
+            .HasMaxLength(20);
     }
 }
 

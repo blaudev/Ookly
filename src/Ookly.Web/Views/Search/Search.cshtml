@@ -6,8 +6,8 @@
 
 @section Scripts {
     <script>
-        const countryName = '@Model.CountryName';
-        const categoryName = '@Model.CategoryName';
+        const countryId = '@Model.CountryId';
+        const categoryId = '@Model.CategoryId';
     </script>
 
     <script src="~/js/search.js" asp-append-version="true"></script>
@@ -16,7 +16,7 @@
 <div id="search" class="page">
     <header class="top container">
         <div class="brand">
-            <a asp-controller="Search" asp-route-countryName="@Model.CountryName" asp-route-categoryName="@Model.CategoryName">
+            <a asp-controller="Search" asp-route-countryId="@Model.CountryId" asp-route-categoryId="@Model.CategoryId">
                 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="55 258 89.844 37" width="60px">
                     <g>
@@ -39,8 +39,8 @@
     <div class="filters-dialog" style="display: none;">
         <form id="filters" class="content" asp-action="Search" method="get">
 
-            <input type="hidden" asp-for="@Model.CountryName" />
-            <input type="hidden" asp-for="@Model.CategoryName" />
+            <input type="hidden" asp-for="@Model.CountryId" />
+            <input type="hidden" asp-for="@Model.CategoryId" />
 
             <div class="header">
                 <div class="title">

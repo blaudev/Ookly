@@ -9,12 +9,8 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {
-        builder.Property(p => p.Name)
-            .HasMaxLength(20)
-            .IsRequired();
-
-        builder.HasIndex(p => p.Name)
-            .IsUnique();
+        builder.Property(p => p.Id)
+            .HasMaxLength(20);
     }
 }
 

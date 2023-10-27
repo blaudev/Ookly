@@ -12,11 +12,11 @@ public class SearchUseCaseRequestModelBinder : IModelBinder
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        var countryName = bindingContext.ValueProvider.GetValue("CountryName").FirstValue ?? string.Empty;
-        var categoryName = bindingContext.ValueProvider.GetValue("CategoryName").FirstValue ?? string.Empty;
+        var countryId = bindingContext.ValueProvider.GetValue("CountryId").FirstValue ?? string.Empty;
+        var categoryId = bindingContext.ValueProvider.GetValue("CategoryId").FirstValue ?? string.Empty;
         var filters = GetFilters(bindingContext);
 
-        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryName, categoryName, filters));
+        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filters));
         await Task.CompletedTask;
     }
 

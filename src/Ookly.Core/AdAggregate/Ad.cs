@@ -14,17 +14,17 @@ public enum AdStatus
 public class Ad(
     Guid id,
     AdStatus status,
-    Guid categoryId,
+    string categoryId,
     string sourceUrl,
     string title,
     string pictureUrl,
     string? description,
     long price,
-    Guid countryId,
+    string countryId,
     string? state,
     string? city,
-    Guid? vehicleBrandId,
-    Guid? vehicleModelId,
+    string? vehicleBrandId,
+    string? vehicleModelId,
     int? vehicleYear,
     int? vehicleMileage,
     string? vehicleFuelType,
@@ -42,7 +42,7 @@ public class Ad(
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime? ProcessedAt { get; private set; }
 
-    public Guid CategoryId { get; private set; } = categoryId;
+    public string CategoryId { get; private set; } = categoryId;
     public Category Category { get; private set; } = default!;
 
     public string SourceUrl { get; private set; } = sourceUrl;
@@ -53,16 +53,16 @@ public class Ad(
 
     public long Price { get; private set; } = price;
 
-    public Guid CountryId { get; private set; } = countryId;
+    public string CountryId { get; private set; } = countryId;
     public Country Country { get; private set; } = default!;
 
     public string? State { get; private set; } = state;
     public string? City { get; private set; } = city;
 
-    public Guid? VehicleBrandId { get; private set; } = vehicleBrandId;
+    public string? VehicleBrandId { get; private set; } = vehicleBrandId;
     public VehicleBrand? VehicleBrand { get; private set; }
 
-    public Guid? VehicleModelId { get; private set; } = vehicleModelId;
+    public string? VehicleModelId { get; private set; } = vehicleModelId;
     public VehicleModel? VehicleModel { get; private set; }
 
     public int? VehicleYear { get; private set; } = vehicleYear;

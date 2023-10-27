@@ -24,11 +24,11 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("CategoryCountry", b =>
                 {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CategoriesId")
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<Guid>("CountriesId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CountriesId")
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("CategoriesId", "CountriesId");
 
@@ -49,15 +49,17 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Property<int?>("Bedrooms")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("City")
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<Guid>("CountryId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -102,8 +104,8 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<Guid?>("VehicleBrandId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("VehicleColor")
                         .HasMaxLength(10)
@@ -116,8 +118,8 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Property<int?>("VehicleMileage")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("VehicleModelId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("VehicleModelId")
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int?>("VehicleYear")
                         .HasColumnType("integer");
@@ -137,79 +139,47 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Category", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Country", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleBrand", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("VehicleBrands");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleModel", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<Guid?>("VehicleBrandId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("VehicleBrandId");
 

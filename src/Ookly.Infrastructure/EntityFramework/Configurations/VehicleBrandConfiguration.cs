@@ -9,12 +9,8 @@ public class VehicleBrandConfiguration : IEntityTypeConfiguration<VehicleBrand>
 {
     public void Configure(EntityTypeBuilder<VehicleBrand> builder)
     {
-        builder.Property(p => p.Name)
-            .HasMaxLength(20)
-            .IsRequired();
-
-        builder.HasIndex(p => p.Name)
-            .IsUnique();
+        builder.Property(p => p.Id)
+            .HasMaxLength(20);
     }
 }
 

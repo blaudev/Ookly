@@ -1,3 +1,4 @@
+using Ookly.Core.AdAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
 using Ookly.Infrastructure.EntityFramework.Repositories;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEntityFramework(builder.Configuration);
 
+builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IVehicleBrandRepository, VehicleBrandRepository>();
 

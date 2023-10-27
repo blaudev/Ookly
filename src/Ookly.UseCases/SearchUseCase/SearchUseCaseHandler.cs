@@ -9,13 +9,13 @@ public class SearchUseCaseHandler(IFacetService facetService) : IUseCaseHandler<
     {
         request.Validate();
 
-        var facets = request.CategoryName switch
+        var facets = request.CategoryId switch
         {
             "Vehicles" => await facetService.VehicleFacetsAsync(request),
-            _ => throw new ValidationException(nameof(request.CategoryName))
+            _ => throw new ValidationException(nameof(request.CategoryId))
         };
 
-        var response = new SearchUseCaseResponse(request.CountryName, request.CategoryName, request.Filters, facets, 10, []);
+        var response = new SearchUseCaseResponse(request.CountryId, request.CategoryId, request.Filters, facets, 10, []);
         return await Task.FromResult(response);
     }
 }

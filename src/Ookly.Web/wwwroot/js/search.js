@@ -8,8 +8,8 @@
 function searchUrl(filter) {
     const url = new URL('api/search', window.location.origin);
 
-    url.searchParams.set('countryName', countryName);
-    url.searchParams.set('categoryName', categoryName);
+    url.searchParams.set('countryId', countryId);
+    url.searchParams.set('categoryId', categoryId);
 
     Object.keys(filter).forEach((key) => {
         url.searchParams.set(key, filter[key]);

@@ -3,11 +3,11 @@ using Blau.Validations;
 
 namespace Ookly.UseCases.SearchUseCase;
 
-public record SearchUseCaseRequest(string CountryName, string CategoryName, Dictionary<string, string> Filters) : IUseCaseRequest, IValidable
+public record SearchUseCaseRequest(string CountryId, string CategoryId, Dictionary<string, string> Filters) : IUseCaseRequest, IValidable
 {
     public void Validate()
     {
-        Validator.NotEmpty(() => CountryName);
-        Validator.NotEmpty(() => CategoryName);
+        Validator.NotEmpty(() => CountryId);
+        Validator.NotEmpty(() => CategoryId);
     }
 }
