@@ -26,14 +26,15 @@ public class Country(string id) : Entity<string>(id), IAggregateRoot
         Filters.Add(filter);
     }
 
-    public void AddCategoryFilter(CountryCategoryFilter data)
+    public void AddMeta(Category category, Filter filter)
     {
-        data.Category.AddFilter(data.Filter);
-        data.Filter.AddCategory(data.Category);
+        category.AddFilter(filter);
+        AddCategory(category);
 
-        AddCategory(data.Category);
-        AddFilter(data.Filter);
+        filter.AddCategory(category);
+        AddFilter(filter);
 
+        var data = new CountryCategoryFilter(this, category, filter);
         CountryCategoryFilter.Add(data);
     }
 }

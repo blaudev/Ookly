@@ -34,8 +34,8 @@ public class SeedTestDataService(
             return;
         }
 
-        _chile.AddCategoryFilter(new CountryCategoryFilter(_chile, _vehiclesCategory, _vehicleBrandFilter));
-        _chile.AddCategoryFilter(new CountryCategoryFilter(_chile, _vehiclesCategory, _vehicleModelFilter));
+        _chile.AddMeta(_vehiclesCategory, _vehicleBrandFilter);
+        _chile.AddMeta(_vehiclesCategory, _vehicleModelFilter);
 
         //_spain.AddCategories([_vehiclesCategory, _realEstateCategory]);
 
