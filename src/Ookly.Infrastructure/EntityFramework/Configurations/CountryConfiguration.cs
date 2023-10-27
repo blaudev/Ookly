@@ -11,6 +11,16 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
     {
         builder.Property(p => p.Id)
             .HasMaxLength(20);
+
+        builder
+            .HasMany(p => p.Categories)
+            .WithMany(p => p.Countries)
+            .UsingEntity("CountryCategory");
+
+        builder
+            .HasMany(p => p.Filters)
+            .WithMany(p => p.Countries)
+            .UsingEntity("CountryFilter");
     }
 }
 
