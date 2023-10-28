@@ -8,7 +8,10 @@ using Ookly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddEntityFramework(builder.Configuration);
+builder.Services.AddElasticClient(builder.Configuration);
 
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
