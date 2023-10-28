@@ -11,5 +11,10 @@ public class FilterTypeConfiguration : IEntityTypeConfiguration<FilterType>
     {
         builder.Property(p => p.Id)
             .HasMaxLength(20);
+
+        builder.Property(p => p.ValueType)
+            .HasConversion<string>()
+            .HasMaxLength(10)
+            .IsRequired();
     }
 }

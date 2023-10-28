@@ -9,18 +9,20 @@ public class SeedTestDataService(
     IVehicleBrandRepository vehicleBrandRepository,
     IAdRepository adRepository)
 {
-    private static readonly Country _chile = new("Chile");
-    private static readonly Country _spain = new("España");
+    private static readonly Country _chile = new("chile");
+    private static readonly Country _spain = new("spain");
 
-    private static readonly CategoryType _vehiclesCategoryType = new("Vehicles");
-    private static readonly CategoryType _realEstateCategoryType = new("Real Estate");
+    private static readonly CategoryType _vehiclesCategoryType = new("vehicles");
+    private static readonly CategoryType _realEstateCategoryType = new("real-estate");
 
     private static readonly Category _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
 
-    private static readonly FilterType _vehicleBrandFilterType = new("Vehicle Brand");
-    private static readonly FilterType _vehicleModelFilterType = new("Vehicle Model");
+    private static readonly FilterType _vehicleBrandFilterType = new("brand", FilterTypeValueType.String);
+    private static readonly FilterType _vehicleModelFilterType = new("model", FilterTypeValueType.String);
+    private static readonly FilterType _vehicleYearFilterType = new("year", FilterTypeValueType.Number);
 
-    private static readonly Filter _chileVehicleBrandFilterType = new(_chileVehiclesCategory, _vehicleBrandFilterType);
+    private static readonly Filter _chileVehicleBrandFilter = new(_chileVehiclesCategory, _vehicleBrandFilterType);
+    private static readonly Filter _chileYearFilter = new(_chileVehiclesCategory, _vehicleYearFilterType);
 
     private static readonly VehicleModel _mercedesBenzC200Model = new("C 200");
     private static readonly VehicleBrand _mercedesBenz = new("Mercedes Benz");
@@ -38,8 +40,16 @@ public class SeedTestDataService(
             return;
         }
 
+        _chileYearFilter.AddFacets(Enumerable
+            .Range(DateTime.Now.Year - 50, 50)
+            .Reverse()
+            .Select(x => new Facet(_chileYearFilter, x.ToString(), x.ToString()))
+            .ToList());
 
-        _chileVehiclesCategory.AddFilter(_chileVehicleBrandFilterType);
+        _chileVehiclesCategory.AddFilter(_chileYearFilter);
+
+        _chileVehiclesCategory.AddFilter(_chileVehicleBrandFilter);
+
         _chile.AddCategory(_chileVehiclesCategory);
 
 
