@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231028183624_AdProperty")]
+    partial class AdProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +31,19 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("Bathrooms")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Bedrooms")
+                        .HasColumnType("integer");
+
                     b.Property<string>("CategoryId")
                         .IsRequired()
                         .HasColumnType("character varying(40)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("CountryId")
                         .IsRequired()
@@ -41,6 +54,12 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool?>("Furnished")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Pets")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PictureUrl")
                         .IsRequired()
@@ -58,7 +77,14 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<string>("State")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
                     b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Surface")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -66,11 +92,35 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("VehicleColor")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("VehicleFuelType")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<int?>("VehicleMileage")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VehicleModelId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("VehicleYear")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CountryId");
+
+                    b.HasIndex("VehicleBrandId");
+
+                    b.HasIndex("VehicleModelId");
 
                     b.ToTable("Ads");
                 });
@@ -88,8 +138,11 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FilterTypeId")
-                        .IsRequired()
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("NumericValue")
                         .HasColumnType("numeric");
@@ -256,9 +309,21 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ookly.Core.VehicleBrandAggregate.VehicleBrand", "VehicleBrand")
+                        .WithMany()
+                        .HasForeignKey("VehicleBrandId");
+
+                    b.HasOne("Ookly.Core.VehicleBrandAggregate.VehicleModel", "VehicleModel")
+                        .WithMany()
+                        .HasForeignKey("VehicleModelId");
+
                     b.Navigation("Category");
 
                     b.Navigation("Country");
+
+                    b.Navigation("VehicleBrand");
+
+                    b.Navigation("VehicleModel");
                 });
 
             modelBuilder.Entity("Ookly.Core.AdAggregate.AdProperty", b =>
@@ -271,9 +336,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasOne("Ookly.Core.CountryAggregate.FilterType", "FilterType")
                         .WithMany()
-                        .HasForeignKey("FilterTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FilterTypeId");
 
                     b.Navigation("Ad");
 

@@ -2,8 +2,8 @@
 
 public enum FilterTypeValueType
 {
-    String,
-    Number,
+    Text,
+    Numeric,
     Boolean
 }
 

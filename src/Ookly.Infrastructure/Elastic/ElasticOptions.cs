@@ -1,6 +1,6 @@
 ﻿namespace Ookly.Infrastructure.Elastic;
 
-public class ElasticOptions(string scheme, string host, int port, string username, string? password, string indexName)
+public class ElasticOptions(string scheme, string host, int port, string username, string password, string indexName)
 {
     public string Scheme { get; private set; } = scheme;
     public string Host { get; private set; } = host;
