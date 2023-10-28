@@ -5,12 +5,11 @@ using Ookly.Core.CountryAggregate;
 
 namespace Ookly.Infrastructure.EntityFramework.Configurations;
 
-public class CountryConfiguration : IEntityTypeConfiguration<Country>
+public class FilterTypeConfiguration : IEntityTypeConfiguration<FilterType>
 {
-    public void Configure(EntityTypeBuilder<Country> builder)
+    public void Configure(EntityTypeBuilder<FilterType> builder)
     {
         builder.Property(p => p.Id)
             .HasMaxLength(20);
     }
 }
-

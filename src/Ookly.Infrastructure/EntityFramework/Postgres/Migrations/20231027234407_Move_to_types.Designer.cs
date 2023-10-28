@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231027234407_Move_to_types")]
+    partial class Move_to_types
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,51 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CategoryTypeFilterType", b =>
+                {
+                    b.Property<string>("CategoriesId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("FiltersId")
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("CategoriesId", "FiltersId");
+
+                    b.HasIndex("FiltersId");
+
+                    b.ToTable("CategoryTypeFilterType");
+                });
+
+            modelBuilder.Entity("CountryCategory", b =>
+                {
+                    b.Property<string>("CategoryTypesId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CountriesId")
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("CategoryTypesId", "CountriesId");
+
+                    b.HasIndex("CountriesId");
+
+                    b.ToTable("CountryCategory");
+                });
+
+            modelBuilder.Entity("CountryFilter", b =>
+                {
+                    b.Property<string>("CountriesId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("FilterTypesId")
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("CountriesId", "FilterTypesId");
+
+                    b.HasIndex("FilterTypesId");
+
+                    b.ToTable("CountryFilter");
+                });
 
             modelBuilder.Entity("Ookly.Core.AdAggregate.Ad", b =>
                 {
@@ -125,8 +173,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Category", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
+                        .HasColumnType("text");
 
                     b.Property<string>("CategoryTypeId")
                         .IsRequired()
@@ -153,7 +200,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryType");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Country", b =>
@@ -167,15 +214,42 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.CountryCategoryFilter", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasColumnType("text");
 
                     b.Property<string>("CategoryId")
                         .IsRequired()
-                        .HasColumnType("character varying(40)");
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("FilterId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("FilterId");
+
+                    b.ToTable("CountryCategoryFilter");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("FilterTypeId")
                         .IsRequired()
@@ -228,10 +302,55 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.ToTable("VehicleModels");
                 });
 
+            modelBuilder.Entity("CategoryTypeFilterType", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.CategoryType", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.FilterType", null)
+                        .WithMany()
+                        .HasForeignKey("FiltersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CountryCategory", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.CategoryType", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryTypesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CountryFilter", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.FilterType", null)
+                        .WithMany()
+                        .HasForeignKey("FilterTypesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Ookly.Core.AdAggregate.Ad", b =>
                 {
                     b.HasOne("Ookly.Core.CountryAggregate.CategoryType", "Category")
-                        .WithMany()
+                        .WithMany("Ads")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -278,6 +397,33 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.CountryCategoryFilter", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.CategoryType", "Category")
+                        .WithMany("CountryCategoryFilter")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.Country", "Country")
+                        .WithMany("CountryCategoryFilter")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.FilterType", "Filter")
+                        .WithMany("CountryCategoryFilter")
+                        .HasForeignKey("FilterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Filter");
+                });
+
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
                 {
                     b.HasOne("Ookly.Core.CountryAggregate.Category", "Category")
@@ -309,9 +455,23 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Navigation("Filters");
                 });
 
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.CategoryType", b =>
+                {
+                    b.Navigation("Ads");
+
+                    b.Navigation("CountryCategoryFilter");
+                });
+
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Country", b =>
                 {
                     b.Navigation("Categories");
+
+                    b.Navigation("CountryCategoryFilter");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.FilterType", b =>
+                {
+                    b.Navigation("CountryCategoryFilter");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleBrand", b =>

@@ -1,18 +1,16 @@
 ﻿namespace Ookly.Core.CountryAggregate;
 
-public class Filter(string id) : Entity<string>(id)
+public class Filter(string categoryId, string filterTypeId) : Entity<string>($"{categoryId}_{filterTypeId}")
 {
-    public List<Country> Countries { get; private set; } = [];
-    public List<Category> Categories { get; private set; } = [];
-    public List<CountryCategoryFilter> CountryCategoryFilter { get; private set; } = [];
-
-    public void AddCategory(Category category)
+    public Filter(Category category, FilterType filterType) : this(category.Id, filterType.Id)
     {
-        if (Categories.Any(x => x.Id == category.Id))
-        {
-            return;
-        }
-
-        Categories.Add(category);
+        Category = category;
+        FilterType = filterType;
     }
+
+    public string CategoryId { get; private set; } = categoryId;
+    public Category Category { get; private set; } = default!;
+
+    public string FilterTypeId { get; private set; } = filterTypeId;
+    public FilterType FilterType { get; private set; } = default!;
 }

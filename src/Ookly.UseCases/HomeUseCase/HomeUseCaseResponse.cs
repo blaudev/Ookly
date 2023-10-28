@@ -21,6 +21,6 @@ public record Category(string Id)
 {
     public static Category Map(Core.CountryAggregate.Category category)
     {
-        return new Category(category.Id);
+        return new Category(category.CategoryTypeId);
     }
 }

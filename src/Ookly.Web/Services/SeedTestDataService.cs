@@ -12,11 +12,15 @@ public class SeedTestDataService(
     private static readonly Country _chile = new("Chile");
     private static readonly Country _spain = new("España");
 
-    private static readonly Category _vehiclesCategory = new("Vehicles");
-    private static readonly Category _realEstateCategory = new("Real Estate");
+    private static readonly CategoryType _vehiclesCategoryType = new("Vehicles");
+    private static readonly CategoryType _realEstateCategoryType = new("Real Estate");
 
-    private static readonly Filter _vehicleBrandFilter = new("vehicle-brand");
-    private static readonly Filter _vehicleModelFilter = new("vehicle-model");
+    private static readonly Category _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
+
+    private static readonly FilterType _vehicleBrandFilterType = new("Vehicle Brand");
+    private static readonly FilterType _vehicleModelFilterType = new("Vehicle Model");
+
+    private static readonly Filter _chileVehicleBrandFilterType = new(_chileVehiclesCategory, _vehicleBrandFilterType);
 
     private static readonly VehicleModel _mercedesBenzC200Model = new("C 200");
     private static readonly VehicleBrand _mercedesBenz = new("Mercedes Benz");
@@ -34,10 +38,10 @@ public class SeedTestDataService(
             return;
         }
 
-        _chile.AddMeta(_vehiclesCategory, _vehicleBrandFilter);
-        _chile.AddMeta(_vehiclesCategory, _vehicleModelFilter);
 
-        //_spain.AddCategories([_vehiclesCategory, _realEstateCategory]);
+        _chileVehiclesCategory.AddFilter(_chileVehicleBrandFilterType);
+        _chile.AddCategory(_chileVehiclesCategory);
+
 
         await countryRepository.AddAsync([_chile, _spain]);
     }

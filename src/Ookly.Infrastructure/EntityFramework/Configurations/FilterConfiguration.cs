@@ -10,7 +10,7 @@ public class FilterConfiguration : IEntityTypeConfiguration<Filter>
     public void Configure(EntityTypeBuilder<Filter> builder)
     {
         builder.Property(p => p.Id)
-            .HasMaxLength(20);
+            .HasMaxLength(60);
     }
 }
 

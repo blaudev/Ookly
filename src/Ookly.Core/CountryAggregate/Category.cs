@@ -1,21 +1,23 @@
-﻿using Ookly.Core.AdAggregate;
+﻿namespace Ookly.Core.CountryAggregate;
 
-namespace Ookly.Core.CountryAggregate;
-
-public class Category(string id) : Entity<string>(id)
+public class Category(string countryId, string categoryTypeId) : Entity<string>($"{countryId}_{categoryTypeId}")
 {
-    public List<Country> Countries { get; private set; } = [];
+    public Category(Country country, CategoryType categoryType) : this(country.Id, categoryType.Id)
+    {
+        Country = country;
+        CategoryType = categoryType;
+    }
+
+    public string CountryId { get; private set; } = countryId;
+    public Country Country { get; private set; } = default!;
+
+    public string CategoryTypeId { get; private set; } = categoryTypeId;
+    public CategoryType CategoryType { get; private set; } = default!;
+
     public List<Filter> Filters { get; private set; } = [];
-    public List<CountryCategoryFilter> CountryCategoryFilter { get; private set; } = [];
-    public List<Ad> Ads { get; private set; } = [];
 
     public void AddFilter(Filter filter)
     {
-        if (Filters.Any(x => x.Id == filter.Id))
-        {
-            return;
-        }
-
         Filters.Add(filter);
     }
 }

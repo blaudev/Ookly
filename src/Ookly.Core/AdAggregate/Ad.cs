@@ -43,7 +43,7 @@ public class Ad(
     public DateTime? ProcessedAt { get; private set; }
 
     public string CategoryId { get; private set; } = categoryId;
-    public Category Category { get; private set; } = default!;
+    public CategoryType Category { get; private set; } = default!;
 
     public string SourceUrl { get; private set; } = sourceUrl;
 

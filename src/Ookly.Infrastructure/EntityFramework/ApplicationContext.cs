@@ -20,7 +20,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     }
 
     public virtual DbSet<Ad> Ads => Set<Ad>();
-    public virtual DbSet<Category> Categories => Set<Category>();
     public virtual DbSet<Country> Countries => Set<Country>();
     public virtual DbSet<VehicleBrand> VehicleBrands => Set<VehicleBrand>();
     public virtual DbSet<VehicleModel> VehicleModels => Set<VehicleModel>();
