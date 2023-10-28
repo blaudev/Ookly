@@ -1,13 +1,11 @@
-﻿using Ookly.Core.AdAggregate;
-using Ookly.Core.CountryAggregate;
+﻿using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
 
 namespace Ookly.Web.Services;
 
 public class SeedTestDataService(
     ICountryRepository countryRepository,
-    IVehicleBrandRepository vehicleBrandRepository,
-    IAdRepository adRepository)
+    IVehicleBrandRepository vehicleBrandRepository)
 {
     private static readonly Country _chile = new("chile");
     private static readonly Country _spain = new("spain");
