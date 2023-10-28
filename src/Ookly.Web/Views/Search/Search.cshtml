@@ -1,0 +1,104 @@
+﻿@model Ookly.UseCases.SearchUseCase.SearchUseCaseResponse
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        const countryId = '@Model.CountryId';
+        const categoryId = '@Model.CategoryId';
+    </script>
+
+    <script src="~/js/search.js" asp-append-version="true"></script>
+}
+
+<div id="search" class="page">
+    <header class="top container">
+        <div class="brand">
+            <a asp-controller="Search" asp-route-countryId="@Model.CountryId" asp-route-categoryId="@Model.CategoryId">
+                <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="55 258 89.844 37" width="60px">
+                    <g>
+                        <path d=" M 77 276 C 77 270.481 81.481 266 87 266 C 92.519 266 97 270.481 97 276 C 97 281.519 92.519 286 87 286 C 81.481 286 77 281.519 77 276 Z  M 81 276 C 81 272.689 83.689 270 87 270 C 90.311 270 93 272.689 93 276 C 93 279.311 90.311 282 87 282 C 83.689 282 81 279.311 81 276 Z " />
+                        <path d=" M 55 276 C 55 270.481 59.481 266 65 266 C 70.519 266 75 270.481 75 276 C 75 281.519 70.519 286 65 286 C 59.481 286 55 281.519 55 276 Z  M 59 276 C 59 272.689 61.689 270 65 270 C 68.311 270 71 272.689 71 276 C 71 279.311 68.311 282 65 282 C 61.689 282 59 279.311 59 276 Z " />
+                        <path d=" M 103 277.25 L 110 286 L 115 286 L 107 276 L 115 266 L 114 266 L 110 266 L 103 274.75 L 103 258 L 99 258 L 99 286 L 103 286 L 103 277.25 Z " />
+                        <path d=" M 118.262 282.696 Q 118.306 285.931 118.262 258 L 123.017 258 Q 123.013 277.018 123.017 280 Q 123.02 282.982 125.337 282.485 L 125.267 287 Q 118.953 286.696 118.262 282.696 Z " />
+                        <path d=" M 134.427 278.074 L 140.156 265.96 L 144.844 265.96 L 131.041 295 L 129 295 L 126.421 295 L 131.61 284.03 L 125.705 265.781 L 130.58 265.781 L 134.427 278.074 Z " />
+                    </g>
+                </svg>
+            </a>
+        </div>
+
+        <button class="filters-button button">
+            Filtros
+            <span>2</span>
+        </button>
+    </header>
+
+    <div class="filters-dialog" style="display: none;">
+        <form id="filters" class="content" asp-action="Search" method="get">
+
+            <input type="hidden" asp-for="@Model.CountryId" />
+            <input type="hidden" asp-for="@Model.CategoryId" />
+
+            <div class="header">
+                <div class="title">
+                    <button type="button" class="remove-filters-button button">Limpiar filtros</button>
+                </div>
+
+                <svg class="close-button" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.707 5.293a1 1 0 0 0-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 1 0 1.414 1.414L12 13.414l5.293 5.293a1 1 0 0 0 1.414-1.414L13.414 12l5.293-5.293a1 1 0 1 0-1.414-1.414L12 10.586 6.707 5.293Z"></path></svg>
+            </div>
+
+            <div class="filters">
+                <div class="fields">
+                    @foreach(var facet in Model.Facets)
+                    {
+                        <div class="field">
+                            <label>@facet.Name</label>
+                            <select class="filter" name="@facet.FilterName">
+                                <option class="option" value="">@facet.Name</option>
+                                @foreach(var option in facet.Items)
+                                {
+                                    @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
+                                    {
+                                        <option class="option" value="@option.Value" selected>@option.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option class="option" value="@option.Value">@option.Text</option>
+                                    }
+                                })
+                            </select>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+            <div class="footer">
+                <button type="submit" class="button"><span class="counter">@Model.AdCount</span> resultaos</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="ads container">
+        @for (var i = 0; i < 10; i++)
+        {
+            foreach (var ad in Model.Ads)
+            {
+                <div class="ad">
+                    <figure>
+                        <picture>
+                            <img class="pic" alt="@ad.Title" src="@ad.PictureUrl" />
+                        </picture>
+                    </figure>
+                    <div class="price">
+                        <price value="@ad.Price" currency-id="@ad.CurrencyId"></price>
+                    </div>
+                    <h2>@ad.Title</h2>
+                </div>
+            }
+        }
+    </div>
+</div>

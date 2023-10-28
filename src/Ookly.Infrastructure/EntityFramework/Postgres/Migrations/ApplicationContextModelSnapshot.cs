@@ -17,25 +17,10 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("CategoryCountry", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CountriesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("CategoriesId", "CountriesId");
-
-                    b.HasIndex("CountriesId");
-
-                    b.ToTable("CategoryCountry");
-                });
 
             modelBuilder.Entity("Ookly.Core.AdAggregate.Ad", b =>
                 {
@@ -43,146 +28,341 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("Bathrooms")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Bedrooms")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool?>("Furnished")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Pets")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PictureUrl")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SourceUrl")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("State")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Surface")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("VehicleColor")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("VehicleFuelType")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<int?>("VehicleMileage")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VehicleModelId")
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("VehicleYear")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("VehicleBrandId");
+
+                    b.HasIndex("VehicleModelId");
+
                     b.ToTable("Ads");
                 });
 
-            modelBuilder.Entity("Ookly.Core.CategoryAggregate.Category", b =>
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Category", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CategoryTypeId")
                         .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryTypeId");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.CategoryType", b =>
+                {
+                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Categories");
+                    b.ToTable("CategoryType");
                 });
 
             modelBuilder.Entity("Ookly.Core.CountryAggregate.Country", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleBrand", b =>
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Facet", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FilterId")
                         .IsRequired()
-                        .HasMaxLength(20)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilterId");
+
+                    b.ToTable("Facet");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("FilterTypeId")
+                        .IsRequired()
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("FilterTypeId");
+
+                    b.ToTable("Filter");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.FilterType", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("ValueType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FilterType");
+                });
+
+            modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleBrand", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("VehicleBrands");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleModel", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<Guid?>("VehicleBrandId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("VehicleBrandId");
 
                     b.ToTable("VehicleModels");
                 });
 
-            modelBuilder.Entity("CategoryCountry", b =>
-                {
-                    b.HasOne("Ookly.Core.CategoryAggregate.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ookly.Core.CountryAggregate.Country", null)
-                        .WithMany()
-                        .HasForeignKey("CountriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Ookly.Core.AdAggregate.Ad", b =>
                 {
-                    b.HasOne("Ookly.Core.CategoryAggregate.Category", "Category")
-                        .WithMany("Ads")
+                    b.HasOne("Ookly.Core.CountryAggregate.CategoryType", "Category")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Ookly.Core.CountryAggregate.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.VehicleBrandAggregate.VehicleBrand", "VehicleBrand")
+                        .WithMany()
+                        .HasForeignKey("VehicleBrandId");
+
+                    b.HasOne("Ookly.Core.VehicleBrandAggregate.VehicleModel", "VehicleModel")
+                        .WithMany()
+                        .HasForeignKey("VehicleModelId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("VehicleBrand");
+
+                    b.Navigation("VehicleModel");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Category", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.CategoryType", "CategoryType")
+                        .WithMany()
+                        .HasForeignKey("CategoryTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.Country", "Country")
+                        .WithMany("Categories")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CategoryType");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Facet", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.Filter", "Filter")
+                        .WithMany("Facets")
+                        .HasForeignKey("FilterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Filter");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
+                {
+                    b.HasOne("Ookly.Core.CountryAggregate.Category", "Category")
+                        .WithMany("Filters")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.CountryAggregate.FilterType", "FilterType")
+                        .WithMany()
+                        .HasForeignKey("FilterTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("FilterType");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleModel", b =>
                 {
                     b.HasOne("Ookly.Core.VehicleBrandAggregate.VehicleBrand", null)
-                        .WithMany("Models")
+                        .WithMany("VehicleModels")
                         .HasForeignKey("VehicleBrandId");
                 });
 
-            modelBuilder.Entity("Ookly.Core.CategoryAggregate.Category", b =>
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Category", b =>
                 {
-                    b.Navigation("Ads");
+                    b.Navigation("Filters");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Country", b =>
+                {
+                    b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("Ookly.Core.CountryAggregate.Filter", b =>
+                {
+                    b.Navigation("Facets");
                 });
 
             modelBuilder.Entity("Ookly.Core.VehicleBrandAggregate.VehicleBrand", b =>
                 {
-                    b.Navigation("Models");
+                    b.Navigation("VehicleModels");
                 });
 #pragma warning restore 612, 618
         }

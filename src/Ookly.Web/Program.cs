@@ -1,21 +1,27 @@
+using Ookly.Core.AdAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
 using Ookly.Infrastructure.EntityFramework.Repositories;
-using Ookly.UseCases.GetCountryStats;
+using Ookly.UseCases.HomeUseCase;
+using Ookly.UseCases.SearchUseCase;
 using Ookly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEntityFramework(builder.Configuration);
 
+builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IVehicleBrandRepository, VehicleBrandRepository>();
 
 builder.Services.AddScoped<SeedTestDataService>();
 
-builder.Services.AddScoped<GetCountryStatsHandler>();
+builder.Services.AddScoped<HomeUseCaseHandler>();
+builder.Services.AddScoped<SearchUseCaseHandler>();
 
-builder.Services.AddRazorPages();
+builder.Services.AddScoped<IFacetService, FacetService>();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -35,6 +41,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Home}/{id?}");
 
 app.Run();

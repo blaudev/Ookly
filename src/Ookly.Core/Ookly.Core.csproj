@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\..\blau\src\Blau\Blau.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FilterAggregate\" />
+  </ItemGroup>
+
 </Project>
