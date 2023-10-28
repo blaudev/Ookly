@@ -25,6 +25,21 @@ public static partial class ServiceCollectionExtensions
         var client = new ElasticClient(settings);
         services.AddSingleton(client);
 
+        if (client.Indices.Exists(options.IndexName).Exists)
+        {
+            client.Indices.Create(options.IndexName, c => c
+                .Map<AdDocument>(m => m
+                    .AutoMap()
+                    .Properties(p => p
+                        .Text(t => t
+                            .Name(n => n.Title)
+                            .Analyzer("spanish")
+                        )
+                    )
+                )
+            );
+        }
+
         return services;
     }
 }
