@@ -12,8 +12,8 @@ public class SearchUseCaseRequestModelBinder : IModelBinder
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        var countryId = bindingContext.ValueProvider.GetValue("CountryId").FirstValue ?? string.Empty;
-        var categoryId = bindingContext.ValueProvider.GetValue("CategoryId").FirstValue ?? string.Empty;
+        var countryId = bindingContext.ValueProvider.GetValue("country").FirstValue ?? string.Empty;
+        var categoryId = bindingContext.ValueProvider.GetValue("category").FirstValue ?? string.Empty;
         var filters = GetFilters(bindingContext);
 
         bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filters));

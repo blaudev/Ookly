@@ -4,7 +4,7 @@ namespace Ookly.UseCases.HomeUseCase;
 
 public record HomeUseCaseResponse(List<Country> Countries) : IUseCaseResponse;
 
-public record Country(string Id, IReadOnlyCollection<Category> Categories)
+public record Country(string Id, List<Category> Categories)
 {
     public static Country Map(Core.CountryAggregate.Country country)
     {
