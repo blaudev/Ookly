@@ -1,13 +1,13 @@
 ﻿namespace Ookly.Infrastructure.Elastic;
 
-public class ElasticOptions(string scheme, string host, int port, string username, string? password, string indexName)
+public record ElasticOptions
 {
-    public string Scheme { get; private set; } = scheme;
-    public string Host { get; private set; } = host;
-    public int Port { get; private set; } = port;
-    public string Username { get; private set; } = username;
-    public string Password { get; private set; } = password;
-    public string IndexName { get; private set; } = indexName;
+    public string Scheme { get; init; } = default!;
+    public string Host { get; init; } = default!;
+    public int Port { get; init; }
+    public string Username { get; init; } = default!;
+    public string Password { get; init; } = default!;
+    public string IndexName { get; init; } = default!;
 
     public Uri Uri => new($"{Scheme}://{Username}:{Password}@{Host}:{Port}");
 }

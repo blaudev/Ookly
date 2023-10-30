@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231028184951_Remove_ad_properties")]
+    partial class Remove_ad_properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,6 +93,10 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Property<string>("FilterTypeId")
                         .IsRequired()
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("NumericValue")
                         .HasColumnType("numeric");

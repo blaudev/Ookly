@@ -20,18 +20,6 @@ public class AdConfiguration : IEntityTypeConfiguration<Ad>
         builder.Property(p => p.PictureUrl)
             .HasMaxLength(300)
             .IsRequired();
-
-        builder.Property(p => p.State)
-            .HasMaxLength(30);
-
-        builder.Property(p => p.City)
-            .HasMaxLength(30);
-
-        builder.Property(p => p.VehicleFuelType)
-            .HasMaxLength(10);
-
-        builder.Property(p => p.VehicleColor)
-            .HasMaxLength(10);
     }
 }
 

@@ -1,18 +1,24 @@
 using Ookly.Core.AdAggregate;
+using Ookly.Core.AdDocumentAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Infrastructure.Elastic;
 using Ookly.Infrastructure.EntityFramework.Repositories;
 using Ookly.UseCases.HomeUseCase;
 using Ookly.UseCases.SearchUseCase;
+using Ookly.Web.Configuration;
 using Ookly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddEntityFramework(builder.Configuration);
-builder.Services.AddElasticClient(builder.Configuration);
+builder.Services.Configure<DataOptions>(builder.Configuration.GetSection("Data"));
 
+builder.Services.AddEntityFramework(builder.Configuration);
+builder.Services.AddElastic(builder.Configuration);
+
+builder.Services.AddSingleton<IAdDocumentRepository, AdDocumentRepository>();
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IVehicleBrandRepository, VehicleBrandRepository>();
