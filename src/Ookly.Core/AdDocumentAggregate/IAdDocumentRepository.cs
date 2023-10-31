@@ -4,8 +4,8 @@ namespace Ookly.Core.AdDocumentAggregate;
 
 public interface IAdDocumentRepository
 {
-    Task AddAsync(AdDocument adDocument);
+    Task<bool> AddAsync(AdDocument adDocument);
     Task<List<Ad>> SearchAsync();
-    Task DeleteAdIndexAsync();
-    Task CreateIndexAsync();
+    Task<bool> DeleteAdIndexAsync();
+    Task<bool> CreateIndexAsync();
 }

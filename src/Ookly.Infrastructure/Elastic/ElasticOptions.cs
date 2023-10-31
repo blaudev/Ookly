@@ -13,5 +13,5 @@ public record ElasticOptions : IDatabaseOptions
     public string Password { get; init; } = default!;
     public string Index { get; init; } = default!;
 
-    public string ConnectionString => $"{Scheme}://{Username}:{Password}@{Host}:{Port}";
+    public string ConnectionString => string.IsNullOrEmpty(Username) ? $"{Scheme}://{Host}:{Port}" : $"{Scheme}://{Username}:{Password}@{Host}:{Port}";
 }

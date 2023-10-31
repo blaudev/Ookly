@@ -66,19 +66,21 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
     }
 
 
-    public async Task AddAsync(AdDocument adDocument)
+    public async Task<bool> AddAsync(AdDocument adDocument)
     {
-        await client.IndexDocumentAsync(adDocument);
+        var response = await client.IndexDocumentAsync(adDocument);
+        return response.IsValid;
     }
 
-    public async Task DeleteAdIndexAsync()
+    public async Task<bool> DeleteAdIndexAsync()
     {
-        await client.Indices.DeleteAsync(options.Index);
+        var response = await client.Indices.DeleteAsync(options.Index);
+        return response.IsValid;
     }
 
-    public async Task CreateIndexAsync()
+    public async Task<bool> CreateIndexAsync()
     {
-        await client.Indices.CreateAsync(options.Index, c => c
+        var response = await client.Indices.CreateAsync(options.Index, c => c
             .Map<AdDocument>(m => m
                 .AutoMap()
                 .Properties(p => p
@@ -89,5 +91,7 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
                 )
             )
         );
+
+        return response.IsValid;
     }
 }
