@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Ookly.Core.CountryAggregate;
 
-namespace Ookly.Infrastructure.EntityFramework.Configurations;
+namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 
 public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {

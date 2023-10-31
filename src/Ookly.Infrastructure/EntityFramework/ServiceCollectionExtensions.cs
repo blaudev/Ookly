@@ -1,36 +1,41 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Blau.Configuration;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-using Ookly.Infrastructure.Configuration;
-using Ookly.Infrastructure.Elastic;
 using Ookly.Infrastructure.EntityFramework;
+using Ookly.Infrastructure.EntityFramework.InMemory;
+using Ookly.Infrastructure.EntityFramework.Postgres;
+using Ookly.Infrastructure.Options;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Ookly.Infrastructure;
 
 public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.SectionName));
-        var options = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? throw new Exception($"{nameof(ElasticOptions)} must be configured");
+        var options = services.ConfigureRequiredOptions<DatabaseOptions>(configuration);
 
         if (options.DatabaseType == DatabaseType.Postgres)
         {
-            PostgresDatabase(services, options);
+            PostgresDatabase(services, configuration);
             return services;
         }
 
-        InMemoryDatabase(services, options);
+        InMemoryDatabase(services, configuration);
         return services;
     }
 
-    private static void PostgresDatabase(IServiceCollection services, DatabaseOptions options)
+    private static void PostgresDatabase(IServiceCollection services, IConfiguration configuration)
     {
+        var options = services.ConfigureRequiredOptions<PostgresOptions>(configuration);
         services.AddDbContext<ApplicationContext>(ob => ob.UseNpgsql(options.ConnectionString));
     }
 
-    private static void InMemoryDatabase(IServiceCollection services, DatabaseOptions options)
+    private static void InMemoryDatabase(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ApplicationContext>(ob => ob.UseInMemoryDatabase(options.Database));
+        var options = services.ConfigureRequiredOptions<InMemoryOptions>(configuration);
+        services.AddDbContext<ApplicationContext>(ob => ob.UseInMemoryDatabase(options.ConnectionString));
     }
 }

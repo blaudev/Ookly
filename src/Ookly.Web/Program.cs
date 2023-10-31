@@ -2,6 +2,7 @@ using Ookly.Core.AdAggregate;
 using Ookly.Core.AdDocumentAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Infrastructure;
 using Ookly.Infrastructure.Elastic;
 using Ookly.Infrastructure.EntityFramework.Repositories;
 using Ookly.UseCases.HomeUseCase;

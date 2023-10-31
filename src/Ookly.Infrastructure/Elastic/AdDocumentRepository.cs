@@ -73,12 +73,12 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
     public async Task DeleteAdIndexAsync()
     {
-        var r = await client.Indices.DeleteAsync(options.Index);
+        await client.Indices.DeleteAsync(options.Index);
     }
 
     public async Task CreateIndexAsync()
     {
-        var r = await client.Indices.CreateAsync(options.Index, c => c
+        await client.Indices.CreateAsync(options.Index, c => c
             .Map<AdDocument>(m => m
                 .AutoMap()
                 .Properties(p => p

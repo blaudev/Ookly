@@ -1,7 +1,11 @@
-﻿namespace Ookly.Infrastructure.Elastic;
+﻿using Blau.Configuration;
 
-public record ElasticOptions
+namespace Ookly.Infrastructure.Elastic;
+
+public record ElasticOptions : IDatabaseOptions
 {
+    public static string SectionName => "Elastic";
+
     public string Scheme { get; init; } = default!;
     public string Host { get; init; } = default!;
     public int Port { get; init; }
@@ -9,5 +13,5 @@ public record ElasticOptions
     public string Password { get; init; } = default!;
     public string Index { get; init; } = default!;
 
-    public Uri ConnectionString => new($"{Scheme}://{Username}:{Password}@{Host}:{Port}");
+    public string ConnectionString => $"{Scheme}://{Username}:{Password}@{Host}:{Port}";
 }

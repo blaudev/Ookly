@@ -5,8 +5,8 @@ using Ookly.Core.AdAggregate;
 using Ookly.Core.AdDocumentAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
-using Ookly.Infrastructure.Configuration;
 using Ookly.Infrastructure.EntityFramework;
+using Ookly.Infrastructure.Options;
 
 using System.Text;
 
