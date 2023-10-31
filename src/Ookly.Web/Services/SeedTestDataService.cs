@@ -5,8 +5,8 @@ using Ookly.Core.AdAggregate;
 using Ookly.Core.AdDocumentAggregate;
 using Ookly.Core.CountryAggregate;
 using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Infrastructure.Configuration;
 using Ookly.Infrastructure.EntityFramework;
-using Ookly.Web.Configuration;
 
 using System.Text;
 
@@ -14,13 +14,13 @@ namespace Ookly.Web.Services;
 
 public class SeedTestDataService(
     ApplicationContext context,
-    IOptions<DataOptions> dataOptions,
+    IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
     IVehicleBrandRepository vehicleBrandRepository,
     IAdRepository adRepository,
     IAdDocumentRepository adDocumentRepository)
 {
-    private readonly DataOptions options = dataOptions.Value;
+    private readonly DatabaseOptions options = dataOptions.Value;
 
     private static readonly Country _chile = new("chile");
     private static readonly Country _spain = new("spain");

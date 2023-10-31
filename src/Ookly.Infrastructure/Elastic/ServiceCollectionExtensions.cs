@@ -14,8 +14,8 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection AddElastic(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<ElasticOptions>(configuration.GetSection("Elastic"));
+        var options = configuration.GetSection("Elastic").Get<ElasticOptions>() ?? throw new Exception($"{nameof(ElasticOptions)} must be configured");
 
-        var options = configuration.GetSection("Elastic").Get<ElasticOptions>() ?? throw new ArgumentException(nameof(ElasticOptions));
         var pool = new SingleNodeConnectionPool(options.Uri);
 
         var settings = new ConnectionSettings(pool)
