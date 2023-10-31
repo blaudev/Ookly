@@ -1,22 +1,36 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
+using Ookly.Infrastructure.Configuration;
+using Ookly.Infrastructure.Elastic;
 using Ookly.Infrastructure.EntityFramework;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static partial class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddEntityFramework(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        Action<DbContextOptionsBuilder> options = configuration["Database:DatabaseType"] switch
+        services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.SectionName));
+        var options = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? throw new Exception($"{nameof(ElasticOptions)} must be configured");
+
+        if (options.DatabaseType == DatabaseType.Postgres)
         {
-            "InMemory" => new(options => options.UseInMemoryDatabase("OoklyDb")),
-            _ => new(options => options.UseNpgsql(configuration.GetConnectionString("OoklyDb")))
-        };
+            PostgresDatabase(services, options);
+            return services;
+        }
 
-        services.AddDbContext<ApplicationContext>(options);
-
+        InMemoryDatabase(services, options);
         return services;
+    }
+
+    private static void PostgresDatabase(IServiceCollection services, DatabaseOptions options)
+    {
+        services.AddDbContext<ApplicationContext>(ob => ob.UseNpgsql(options.ConnectionString));
+    }
+
+    private static void InMemoryDatabase(IServiceCollection services, DatabaseOptions options)
+    {
+        services.AddDbContext<ApplicationContext>(ob => ob.UseInMemoryDatabase(options.Database));
     }
 }
