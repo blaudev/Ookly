@@ -19,4 +19,6 @@ public record DatabaseOptions
     public string Password { get; init; } = string.Empty;
     public bool Truncate { get; init; }
     public bool Seed { get; init; }
+
+    public string ConnectionString => $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};SSL Mode=Prefer;Trust Server Certificate=true";
 }

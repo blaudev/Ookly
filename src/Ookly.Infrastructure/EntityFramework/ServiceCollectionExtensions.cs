@@ -26,14 +26,7 @@ public static partial class ServiceCollectionExtensions
 
     private static void PostgresDatabase(IServiceCollection services, DatabaseOptions options)
     {
-        var connectionString = options.ConnectionPattern
-            .Replace("@Host", options.Host)
-            .Replace("@Port", options.Port.ToString())
-            .Replace("@Database", options.Database)
-            .Replace("@Username", options.Username)
-            .Replace("@Password", options.Password);
-
-        services.AddDbContext<ApplicationContext>(ob => ob.UseNpgsql(connectionString));
+        services.AddDbContext<ApplicationContext>(ob => ob.UseNpgsql(options.ConnectionString));
     }
 
     private static void InMemoryDatabase(IServiceCollection services, DatabaseOptions options)

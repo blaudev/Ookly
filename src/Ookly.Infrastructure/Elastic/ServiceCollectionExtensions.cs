@@ -16,11 +16,11 @@ public static partial class ServiceCollectionExtensions
         services.Configure<ElasticOptions>(configuration.GetSection("Elastic"));
         var options = configuration.GetSection("Elastic").Get<ElasticOptions>() ?? throw new Exception($"{nameof(ElasticOptions)} must be configured");
 
-        var pool = new SingleNodeConnectionPool(options.Uri);
+        var pool = new SingleNodeConnectionPool(options.ConnectionString);
 
         var settings = new ConnectionSettings(pool)
             .DefaultMappingFor<AdDocument>(x => x
-                .IndexName(options.IndexName)
+                .IndexName(options.Index)
                 .IdProperty("Id"));
 
         var client = new ElasticClient(settings);

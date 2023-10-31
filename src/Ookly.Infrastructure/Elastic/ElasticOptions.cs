@@ -7,7 +7,7 @@ public record ElasticOptions
     public int Port { get; init; }
     public string Username { get; init; } = default!;
     public string Password { get; init; } = default!;
-    public string IndexName { get; init; } = default!;
+    public string Index { get; init; } = default!;
 
-    public Uri Uri => new($"{Scheme}://{Username}:{Password}@{Host}:{Port}");
+    public Uri ConnectionString => new($"{Scheme}://{Username}:{Password}@{Host}:{Port}");
 }
