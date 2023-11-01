@@ -8,7 +8,7 @@ public class AdDocument(
     string title,
     string? description,
     long price,
-    List<Property> properties
+    Dictionary<string, object> properties
     ) : Entity<Guid>(id), IAggregateRoot
 {
     public string CountryId { get; private set; } = countryId;
@@ -17,7 +17,7 @@ public class AdDocument(
     public string Title { get; private set; } = title;
     public string? Description { get; private set; } = description!;
     public long Price { get; private set; } = price;
-    public List<Property> Properties { get; private set; } = properties;
+    public Dictionary<string, object> Properties { get; private set; } = properties;
 }
 
 public class Property(string name, object value)

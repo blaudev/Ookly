@@ -19,7 +19,7 @@ public class CountryRepository(ApplicationContext context) : Repository<Country>
     {
         return await context.Countries
             .Include(i => i.CountryCategories.OrderBy(o => o.Id))
-                .ThenInclude(i => i.Filters.OrderBy(o => o.Id))
+                .ThenInclude(i => i.CategoryFilters.OrderBy(o => o.Id))
             .Where(i => i.Id == countryId)
             .FirstAsync();
     }

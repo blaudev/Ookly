@@ -91,18 +91,18 @@ public class SeedTestDataService(
             return;
         }
 
-        _chileVehiclesCategory.AddFilter(_chileBrandFilter);
-        _chileVehiclesCategory.AddFilter(_chileModelFilter);
-        _chileVehiclesCategory.AddFilter(_chileYearFilter);
+        _chileVehiclesCategory.AddCategoryFilter(_chileBrandFilter);
+        _chileVehiclesCategory.AddCategoryFilter(_chileModelFilter);
+        _chileVehiclesCategory.AddCategoryFilter(_chileYearFilter);
 
-        _chile.AddCategory(_chileVehiclesCategory);
-        _chile.AddCategory(_chileRealEstateCategory);
+        _chile.AddCountryCategory(_chileVehiclesCategory);
+        _chile.AddCountryCategory(_chileRealEstateCategory);
 
-        _spainVehiclesCategory.AddFilter(_spainBrandFilter);
-        _spainVehiclesCategory.AddFilter(_spainModelFilter);
-        _spainVehiclesCategory.AddFilter(_spainYearFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainBrandFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainModelFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainYearFilter);
 
-        _spain.AddCategory(_spainVehiclesCategory);
+        _spain.AddCountryCategory(_spainVehiclesCategory);
 
         await countryRepository.AddAsync([_chile, _spain]);
     }
@@ -143,7 +143,7 @@ public class SeedTestDataService(
             ad.Title,
             ad.Description,
             ad.Price,
-            ad.Properties.Select(x =>
+            ad.Properties.ToDictionary(x => x.FilterId, x =>
             {
                 var convertedValue = (object)(x switch
                 {
@@ -152,9 +152,9 @@ public class SeedTestDataService(
                     _ => throw new Exception()
                 });
 
-                return new Property(x.FilterId, convertedValue);
+                return convertedValue;
 
-            }).ToList()
+            })
         );
 
         await adDocumentRepository.AddAsync(adDocument);

@@ -4,7 +4,7 @@ public class Country(string id) : Entity<string>(id), IAggregateRoot
 {
     public List<CountryCategory> CountryCategories { get; private set; } = [];
 
-    public void AddCategory(CountryCategory category)
+    public void AddCountryCategory(CountryCategory category)
     {
         CountryCategories.Add(category);
     }
@@ -25,11 +25,11 @@ public class CountryCategory(string countryId, string categoryId) : Entity<strin
     public string CategoryId { get; private set; } = categoryId;
     public Category Category { get; private set; } = default!;
 
-    public List<CategoryFilter> Filters { get; private set; } = [];
+    public List<CategoryFilter> CategoryFilters { get; private set; } = [];
 
-    public void AddFilter(CategoryFilter filter)
+    public void AddCategoryFilter(CategoryFilter filter)
     {
-        Filters.Add(filter);
+        CategoryFilters.Add(filter);
     }
 }
 

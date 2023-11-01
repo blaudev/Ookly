@@ -16,7 +16,7 @@ public static partial class ServiceCollectionExtensions
         var options = services.ConfigureRequiredOptions<ElasticOptions>(configuration);
         var pool = new SingleNodeConnectionPool(new Uri(options.ConnectionString));
 
-        var settings = new ConnectionSettings(pool);
+        var settings = new ConnectionSettings(pool).DisableDirectStreaming();
         //.DefaultMappingFor<AdDocument>(x => x
         //    .IndexName(options.Index)
         //    .IdProperty("Id"));

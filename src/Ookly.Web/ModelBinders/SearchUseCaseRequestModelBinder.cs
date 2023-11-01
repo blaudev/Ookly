@@ -24,7 +24,7 @@ public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepositor
             throw new ValidationException(categoryId);
         }
 
-        var categoryFilterIds = countryCategory.Filters.Select(x => x.FilterId).ToList();
+        var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();
         var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
 
         bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryCategory, filterValues));
