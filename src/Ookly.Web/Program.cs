@@ -4,6 +4,7 @@ using Ookly.Infrastructure.Elastic;
 using Ookly.Infrastructure.EntityFramework.Repositories;
 using Ookly.UseCases.HomeUseCase;
 using Ookly.UseCases.SearchUseCase;
+using Ookly.Web.ModelBinders;
 using Ookly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddScoped<SeedTestDataService>();
 
 builder.Services.AddScoped<HomeUseCaseHandler>();
 builder.Services.AddScoped<SearchUseCaseHandler>();
+
+builder.Services.AddScoped<SearchUseCaseRequestModelBinder>();
 
 builder.Services.AddControllersWithViews();
 

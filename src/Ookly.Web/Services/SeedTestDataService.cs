@@ -30,9 +30,9 @@ public class SeedTestDataService(
 
     private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory);
 
-    private static readonly Filter _brandFilter = new("brand", FilterType.Text);
-    private static readonly Filter _modelFilter = new("model", FilterType.Text);
-    private static readonly Filter _yearFilter = new("year", FilterType.Numeric);
+    private static readonly Filter _brandFilter = new("brand", FilterType.Text, _vehiclesCategory);
+    private static readonly Filter _modelFilter = new("model", FilterType.Text, _vehiclesCategory);
+    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, _vehiclesCategory);
 
     private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
     private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);
