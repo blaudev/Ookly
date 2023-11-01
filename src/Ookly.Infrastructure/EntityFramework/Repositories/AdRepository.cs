@@ -1,4 +1,5 @@
-﻿using Ookly.Core.AdAggregate;
+﻿using Ookly.Core.Entities;
+using Ookly.Core.Interfaces;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 

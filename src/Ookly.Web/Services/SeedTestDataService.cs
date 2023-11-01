@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Ookly.Core.AdAggregate;
-using Ookly.Core.AdDocumentAggregate;
-using Ookly.Core.CountryAggregate;
-using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Core.Entities;
+using Ookly.Core.Interfaces;
 using Ookly.Infrastructure.EntityFramework;
 using Ookly.Infrastructure.Options;
 
@@ -25,17 +23,17 @@ public class SeedTestDataService(
     private static readonly Country _chile = new("chile");
     private static readonly Country _spain = new("spain");
 
-    private static readonly CategoryType _vehiclesCategoryType = new("vehicles");
-    private static readonly CategoryType _realEstateCategoryType = new("real-estate");
+    private static readonly Category _vehiclesCategoryType = new("vehicles");
+    private static readonly Category _realEstateCategoryType = new("real-estate");
 
-    private static readonly Category _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
+    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
 
-    private static readonly FilterType _vehicleBrandFilterType = new("brand", FilterTypeValueType.Text);
-    private static readonly FilterType _vehicleModelFilterType = new("model", FilterTypeValueType.Text);
-    private static readonly FilterType _vehicleYearFilterType = new("year", FilterTypeValueType.Numeric);
+    private static readonly Filter _vehicleBrandFilterType = new("brand", FilterType.Text);
+    private static readonly Filter _vehicleModelFilterType = new("model", FilterType.Text);
+    private static readonly Filter _vehicleYearFilterType = new("year", FilterType.Numeric);
 
-    private static readonly Filter _chileVehicleBrandFilter = new(_chileVehiclesCategory, _vehicleBrandFilterType);
-    private static readonly Filter _chileYearFilter = new(_chileVehiclesCategory, _vehicleYearFilterType);
+    private static readonly CategoryFilter _chileVehicleBrandFilter = new(_chileVehiclesCategory, _vehicleBrandFilterType);
+    private static readonly CategoryFilter _chileYearFilter = new(_chileVehiclesCategory, _vehicleYearFilterType);
 
     private static readonly VehicleModel _mercedesBenzC200Model = new("C 200");
     private static readonly VehicleBrand _mercedesBenz = new("Mercedes Benz");
@@ -89,12 +87,6 @@ public class SeedTestDataService(
         {
             return;
         }
-
-        _chileYearFilter.AddFacets(Enumerable
-            .Range(DateTime.Now.Year - 50, 50)
-            .Reverse()
-            .Select(x => new Facet(_chileYearFilter, x.ToString(), x.ToString()))
-            .ToList());
 
         _chileVehiclesCategory.AddFilter(_chileYearFilter);
 
@@ -152,13 +144,18 @@ public class SeedTestDataService(
             ad.Title,
             ad.Description,
             ad.Price,
-            ad.Properties.ToDictionary(x => x.FilterType.Id, x =>
-                (object)(x switch
+            ad.Properties.Select(x =>
+            {
+                var convertedValue = (object)(x switch
                 {
                     { TextValue: string value } => value,
                     { NumericValue: decimal value } => value,
                     _ => throw new Exception()
-                }))
+                });
+
+                return new Property(x.FilterTypeId, convertedValue);
+
+            }).ToList()
         );
 
         await adDocumentRepository.AddAsync(adDocument);

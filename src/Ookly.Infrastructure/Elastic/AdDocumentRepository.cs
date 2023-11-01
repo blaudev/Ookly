@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 
 using Nest;
-
-using Ookly.Core.AdAggregate;
-using Ookly.Core.AdDocumentAggregate;
+using Ookly.Core.Entities;
+using Ookly.Core.Interfaces;
 
 namespace Ookly.Infrastructure.Elastic;
 
@@ -22,18 +21,8 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
         var resp = await client.SearchAsync<AdDocument>(req);
 
-        var terms = resp.Aggregations
-                    .Terms("filters");
-
         var filters = resp.Aggregations
-                    .Terms("filters")
-                    .Buckets
-                    .ToList();
-
-        var properties = resp.Aggregations
-                    .Terms("properties")
-                    .Buckets
-                    .ToList();
+            .Nested("filters");
 
 
         return new List<Ad>();
@@ -49,7 +38,18 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
                 {
                     Nested = new NestedAggregation("properties")
                     {
-                        Path = "Properties.keyword",
+                        Path = "properties",
+                        Aggregations = new AggregationDictionary()
+                        {
+                            {
+                                "name",
+                                new TermsAggregation("name")
+                                {
+                                    Field = "properties.name",
+                                    Size = 100
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -68,7 +68,7 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
     public async Task<bool> AddAsync(AdDocument adDocument)
     {
-        var response = await client.IndexDocumentAsync(adDocument);
+        var response = await client.IndexAsync(adDocument, i => i.Index(options.Index));
         return response.IsValid;
     }
 
@@ -82,8 +82,18 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
     {
         var response = await client.Indices.CreateAsync(options.Index, c => c
             .Map<AdDocument>(m => m
-                .AutoMap()
                 .Properties(p => p
+                    .Nested<Property>(n => n
+                        .Name(nn => nn.Properties)
+                        .Properties(pp => pp
+                            .Text(k => k
+                                .Name(n => n.Name)
+                            )
+                            .Keyword(t => t
+                                .Name(n => n.Value)
+                            )
+                        )
+                    )
                     .Text(t => t
                         .Name(n => n.Title)
                         .Analyzer("spanish")

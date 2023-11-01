@@ -1,6 +1,6 @@
-﻿using Ookly.Core.Interfaces;
+﻿using Ookly.Core.Entities;
 
-namespace Ookly.Core.VehicleBrandAggregate;
+namespace Ookly.Core.Interfaces;
 
 public interface IVehicleBrandRepository : IRepository<VehicleBrand>
 {

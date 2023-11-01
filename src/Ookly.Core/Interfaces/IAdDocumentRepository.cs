@@ -1,6 +1,6 @@
-﻿using Ookly.Core.AdAggregate;
+﻿using Ookly.Core.Entities;
 
-namespace Ookly.Core.AdDocumentAggregate;
+namespace Ookly.Core.Interfaces;
 
 public interface IAdDocumentRepository
 {

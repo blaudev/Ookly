@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Core.Entities;
 
 namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 

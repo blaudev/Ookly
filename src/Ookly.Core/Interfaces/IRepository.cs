@@ -1,6 +1,6 @@
 ﻿namespace Ookly.Core.Interfaces;
 
-public interface IRepository<T> where T : IEntity, IAggregateRoot
+public interface IRepository<T> where T : IEntity
 {
     Task<bool> AnyAsync();
     Task<T?> ByIdAsync(object id);

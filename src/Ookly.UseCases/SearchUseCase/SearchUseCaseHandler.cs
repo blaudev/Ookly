@@ -1,7 +1,6 @@
 ﻿using Blau.Exceptions;
 using Blau.UseCases;
-
-using Ookly.Core.AdDocumentAggregate;
+using Ookly.Core.Interfaces;
 
 namespace Ookly.UseCases.SearchUseCase;
 

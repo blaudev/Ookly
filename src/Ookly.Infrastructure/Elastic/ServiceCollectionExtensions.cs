@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Nest;
 
-using Ookly.Core.AdDocumentAggregate;
-
 namespace Ookly.Infrastructure.Elastic;
 
 public static partial class ServiceCollectionExtensions
@@ -18,10 +16,10 @@ public static partial class ServiceCollectionExtensions
         var options = services.ConfigureRequiredOptions<ElasticOptions>(configuration);
         var pool = new SingleNodeConnectionPool(new Uri(options.ConnectionString));
 
-        var settings = new ConnectionSettings(pool)
-            .DefaultMappingFor<AdDocument>(x => x
-                .IndexName(options.Index)
-                .IdProperty("Id"));
+        var settings = new ConnectionSettings(pool);
+        //.DefaultMappingFor<AdDocument>(x => x
+        //    .IndexName(options.Index)
+        //    .IdProperty("Id"));
 
         var client = new ElasticClient(settings);
         services.AddSingleton(client);

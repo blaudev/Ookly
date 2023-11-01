@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using Ookly.Core.CountryAggregate;
+using Ookly.Core.Entities;
 
 namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 
-public class FilterConfiguration : IEntityTypeConfiguration<Filter>
+public class FilterConfiguration : IEntityTypeConfiguration<CategoryFilter>
 {
-    public void Configure(EntityTypeBuilder<Filter> builder)
+    public void Configure(EntityTypeBuilder<CategoryFilter> builder)
     {
         builder.Property(p => p.Id)
             .HasMaxLength(60);

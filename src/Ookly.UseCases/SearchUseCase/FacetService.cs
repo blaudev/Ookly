@@ -1,4 +1,4 @@
-﻿using Ookly.Core.VehicleBrandAggregate;
+﻿using Ookly.Core.Interfaces;
 
 namespace Ookly.UseCases.SearchUseCase;
 

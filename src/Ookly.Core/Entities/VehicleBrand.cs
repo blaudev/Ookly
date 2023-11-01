@@ -1,4 +1,4 @@
-﻿namespace Ookly.Core.VehicleBrandAggregate;
+﻿namespace Ookly.Core.Entities;
 
 public class VehicleBrand(string id) : Entity<string>(id), IAggregateRoot
 {
@@ -14,3 +14,5 @@ public class VehicleBrand(string id) : Entity<string>(id), IAggregateRoot
         VehicleModels.AddRange(models);
     }
 }
+
+public class VehicleModel(string id) : Entity<string>(id) { }

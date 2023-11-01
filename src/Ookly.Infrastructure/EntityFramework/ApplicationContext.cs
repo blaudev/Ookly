@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-using Ookly.Core.AdAggregate;
-using Ookly.Core.CountryAggregate;
-using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Core.Entities;
 
 using System.Reflection;
 

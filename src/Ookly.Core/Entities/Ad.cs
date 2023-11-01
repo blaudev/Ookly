@@ -1,6 +1,4 @@
-﻿using Ookly.Core.CountryAggregate;
-
-namespace Ookly.Core.AdAggregate;
+﻿namespace Ookly.Core.Entities;
 
 public enum AdStatus
 {
@@ -27,7 +25,7 @@ public class Ad(
         AdStatus status,
         string sourceUrl,
         Country country,
-        Category category,
+        CountryCategory category,
         string pictureUrl,
         string title,
         long price
@@ -58,7 +56,7 @@ public class Ad(
     public Country Country { get; private set; } = default!;
 
     public string CategoryId { get; private set; } = categoryId;
-    public Category Category { get; private set; } = default!;
+    public CountryCategory Category { get; private set; } = default!;
 
     public string PictureUrl { get; private set; } = pictureUrl;
     public string Title { get; private set; } = title;
@@ -85,4 +83,47 @@ public class Ad(
     {
         Properties.AddRange(properties);
     }
+
+}
+
+public class AdProperty(
+    Guid adId,
+    string filterTypeId,
+    string? textValue = null,
+    decimal? numericValue = null,
+    bool? booleanValue = null) : Entity<Guid>(Guid.NewGuid())
+{
+    public AdProperty(Ad ad, Filter filterType, object value) : this(ad.Id, filterType.Id)
+    {
+        Ad = ad;
+        FilterType = filterType;
+
+        switch (filterType, value)
+        {
+            case ({ ValueType: Entities.FilterType.Text }, string textValue):
+                TextValue = textValue;
+                break;
+            case ({ ValueType: Entities.FilterType.Numeric }, int numericValue):
+                NumericValue = numericValue;
+                break;
+            case ({ ValueType: Entities.FilterType.Numeric }, long numericValue):
+                NumericValue = numericValue;
+                break;
+            case ({ ValueType: Entities.FilterType.Boolean }, bool booleanValue):
+                BooleanValue = booleanValue;
+                break;
+            default:
+                throw new ArgumentException($"{value.GetType()} is not a valid {filterType.GetType}");
+        }
+    }
+
+    public Guid AdId { get; private set; } = adId;
+    public Ad Ad { get; private set; } = default!;
+
+    public string FilterTypeId { get; private set; } = filterTypeId;
+    public Filter FilterType { get; private set; } = default!;
+
+    public string? TextValue { get; private set; } = textValue;
+    public decimal? NumericValue { get; private set; } = numericValue;
+    public bool? BooleanValue { get; private set; } = booleanValue;
 }
