@@ -72,7 +72,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Ads");
+                    b.ToTable("Ads", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.AdProperty", b =>
@@ -103,7 +103,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("FilterId");
 
-                    b.ToTable("AdProperty");
+                    b.ToTable("AdProperty", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.Category", b =>
@@ -114,7 +114,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.CategoryFilter", b =>
@@ -137,7 +137,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("FilterId");
 
-                    b.ToTable("CategoryFilter");
+                    b.ToTable("CategoryFilter", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.Country", b =>
@@ -148,7 +148,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.CountryCategory", b =>
@@ -171,7 +171,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("CountryCategory");
+                    b.ToTable("CountryCategory", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.Filter", b =>
@@ -193,7 +193,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Filter");
+                    b.ToTable("Filter", (string)null);
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.Ad", b =>

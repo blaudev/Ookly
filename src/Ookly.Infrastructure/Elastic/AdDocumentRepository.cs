@@ -13,34 +13,51 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
     public async Task<List<Ad>> SearchAsync(CountryCategory countryCategory)
     {
-        var req = new SearchRequest<AdDocument>(options.Index)
-        {
-            Size = 100,
-            Aggregations = BuildAggregations(countryCategory.CategoryFilters),
-            Query = BuildQuery(),
-        };
+        var sd = new SearchDescriptor<Ad>();
 
-        var resp = await client.SearchAsync<AdDocument>(req);
+        sd.Size(10);
+
+        sd.Query(q => q.MatchAll());
+
+        sd = sd
+            .Aggregations(a => a
+                .Nested("props", n => n
+                    .Path(p => p.Properties)
+                    .Aggregations(aa => aa
+                        .Terms("properties-names", t => t
+                            .Field(p => p.Properties.Suffix("filterId"))
+                            .Aggregations(aa => aa
+                                .Terms("text-values", t => t
+                                    .Field(f => f.Properties.Suffix("textValue"))
+                                )
+                                .Terms("numeric-values", t => t
+                                    .Field(f => f.Properties.Suffix("numericValue"))
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+
+
+        var resp = await client.SearchAsync<Ad>(sd);
+
+        var p = resp.Aggregations.Nested("props");
+        var pn = p.Terms("properties-names");
+        //var pn = resp.Aggregations["properties-names"] as TermsAggregate<Ad>;
+        var r = pn.Buckets.Select(b =>
+        {
+            var name = b.Key;
+            var textValues = b.Terms("text-values").Buckets.Select(b => (b.Key, b.DocCount)).ToList();
+            var numericValues = b.Terms("numeric-values").Buckets.Select(b => (b.Key, b.DocCount)).ToList();
+
+            var values = textValues.Any() ? textValues : numericValues;
+
+            return values;
+        }).ToList();
 
 
         return new List<Ad>();
-    }
-
-    public static AggregationDictionary BuildAggregations(List<CategoryFilter> categoryFilters)
-    {
-        var containers = categoryFilters.Select(x =>
-            (
-                x.FilterId,
-                new AggregationContainer
-                {
-                    Terms = new TermsAggregation($"{x.FilterId}") { Field = $"properties.{x.FilterId}.keyword" }
-                }
-            )
-        )
-        .ToDictionary(x => x.Item1, x => x.Item2);
-
-        var dic = new AggregationDictionary(containers);
-        return dic;
     }
 
     static QueryContainer BuildQuery()
@@ -51,9 +68,9 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
     }
 
 
-    public async Task<bool> AddAsync(AdDocument adDocument)
+    public async Task<bool> AddAsync(Ad ad)
     {
-        var response = await client.IndexAsync(adDocument, i => i.Index(options.Index));
+        var response = await client.IndexAsync(ad, i => i.Index(options.Index));
         return response.IsValid;
     }
 
@@ -65,12 +82,26 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
     public async Task<bool> CreateIndexAsync()
     {
-        var response = await client.Indices.CreateAsync(options.Index, c => c
-            .Map<AdDocument>(m => m
+        var map = await client.Indices.CreateAsync(options.Index, c => c
+            .Map<Ad>(m => m
                 .AutoMap()
+                .Properties(ps => ps
+                    .Text(p => p.Name(n => n.Title).Analyzer("spanish"))
+                    .Keyword(p => p.Name(n => n.CountryId))
+                    .Keyword(p => p.Name(n => n.CategoryId))
+                    .Nested<AdProperty>(n => n
+                        .Name(n => n.Properties)
+                        .Properties(ps => ps
+                            .Keyword(p => p.Name(n => n.FilterId))
+                            .Keyword(p => p.Name(n => n.TextValue))
+                            .Number(p => p.Name(n => n.NumericValue))
+                            .Boolean(p => p.Name(n => n.BooleanValue))
+                        )
+                    )
+                )
             )
         );
 
-        return response.IsValid;
+        return map.IsValid;
     }
 }

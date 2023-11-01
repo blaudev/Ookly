@@ -157,6 +157,6 @@ public class SeedTestDataService(
             })
         );
 
-        await adDocumentRepository.AddAsync(adDocument);
+        await adDocumentRepository.AddAsync(ad);
     }
 }
