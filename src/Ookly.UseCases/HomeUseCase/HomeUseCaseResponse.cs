@@ -22,6 +22,6 @@ public record Category(string Id)
 {
     public static Category Map(CountryCategory category)
     {
-        return new Category(category.CategoryTypeId);
+        return new Category(category.CategoryId);
     }
 }

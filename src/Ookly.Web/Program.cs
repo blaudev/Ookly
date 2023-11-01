@@ -16,14 +16,11 @@ builder.Services.AddElastic(builder.Configuration);
 builder.Services.AddSingleton<IAdDocumentRepository, AdDocumentRepository>();
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-builder.Services.AddScoped<IVehicleBrandRepository, VehicleBrandRepository>();
 
 builder.Services.AddScoped<SeedTestDataService>();
 
 builder.Services.AddScoped<HomeUseCaseHandler>();
 builder.Services.AddScoped<SearchUseCaseHandler>();
-
-builder.Services.AddScoped<IFacetService, FacetService>();
 
 builder.Services.AddControllersWithViews();
 

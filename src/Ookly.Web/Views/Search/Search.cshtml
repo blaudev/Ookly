@@ -50,31 +50,34 @@
                 <svg class="close-button" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.707 5.293a1 1 0 0 0-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 1 0 1.414 1.414L12 13.414l5.293 5.293a1 1 0 0 0 1.414-1.414L13.414 12l5.293-5.293a1 1 0 1 0-1.414-1.414L12 10.586 6.707 5.293Z"></path></svg>
             </div>
 
-            <div class="filters">
-                <div class="fields">
-                    @foreach(var facet in Model.Facets)
-                    {
-                        <div class="field">
-                            <label>@facet.Name</label>
-                            <select class="filter" name="@facet.FilterName">
-                                <option class="option" value="">@facet.Name</option>
-                                @foreach(var option in facet.Items)
-                                {
-                                    @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
+            @if (Model.Facets != null)
+            {
+                <div class="filters">
+                    <div class="fields">
+                        @foreach(var facet in Model.Facets)
+                        {
+                            <div class="field">
+                                <label>@facet.Name</label>
+                                <select class="filter" name="@facet.FilterName">
+                                    <option class="option" value="">@facet.Name</option>
+                                    @foreach(var option in facet.Items)
                                     {
-                                        <option class="option" value="@option.Value" selected>@option.Text</option>
-                                    }
-                                    else
-                                    {
-                                        <option class="option" value="@option.Value">@option.Text</option>
-                                    }
-                                })
-                            </select>
-                        </div>
-                    }
-                </div>
+                                        @if (Model.Filters.ContainsKey(facet.FilterName) && Model.Filters[facet.FilterName] == option.Value)
+                                        {
+                                            <option class="option" value="@option.Value" selected>@option.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option class="option" value="@option.Value">@option.Text</option>
+                                        }
+                                    })
+                                </select>
+                            </div>
+                        }
+                    </div>
 
-            </div>
+                </div>
+            }
 
             <div class="footer">
                 <button type="submit" class="button"><span class="counter">@Model.AdCount</span> resultaos</button>

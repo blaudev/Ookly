@@ -14,7 +14,6 @@ public class SeedTestDataService(
     ApplicationContext context,
     IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
-    IVehicleBrandRepository vehicleBrandRepository,
     IAdRepository adRepository,
     IAdDocumentRepository adDocumentRepository)
 {
@@ -23,20 +22,25 @@ public class SeedTestDataService(
     private static readonly Country _chile = new("chile");
     private static readonly Country _spain = new("spain");
 
-    private static readonly Category _vehiclesCategoryType = new("vehicles");
-    private static readonly Category _realEstateCategoryType = new("real-estate");
+    private static readonly Category _vehiclesCategory = new("vehicles");
+    private static readonly Category _realEstateCategory = new("real-estate");
 
-    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
+    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategory);
+    private static readonly CountryCategory _chileRealEstateCategory = new(_chile, _realEstateCategory);
 
-    private static readonly Filter _vehicleBrandFilterType = new("brand", FilterType.Text);
-    private static readonly Filter _vehicleModelFilterType = new("model", FilterType.Text);
-    private static readonly Filter _vehicleYearFilterType = new("year", FilterType.Numeric);
+    private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory);
 
-    private static readonly CategoryFilter _chileVehicleBrandFilter = new(_chileVehiclesCategory, _vehicleBrandFilterType);
-    private static readonly CategoryFilter _chileYearFilter = new(_chileVehiclesCategory, _vehicleYearFilterType);
+    private static readonly Filter _brandFilter = new("brand", FilterType.Text);
+    private static readonly Filter _modelFilter = new("model", FilterType.Text);
+    private static readonly Filter _yearFilter = new("year", FilterType.Numeric);
 
-    private static readonly VehicleModel _mercedesBenzC200Model = new("C 200");
-    private static readonly VehicleBrand _mercedesBenz = new("Mercedes Benz");
+    private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
+    private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);
+    private static readonly CategoryFilter _chileYearFilter = new(_chileVehiclesCategory, _yearFilter);
+
+    private static readonly CategoryFilter _spainBrandFilter = new(_spainVehiclesCategory, _brandFilter);
+    private static readonly CategoryFilter _spainModelFilter = new(_spainVehiclesCategory, _modelFilter);
+    private static readonly CategoryFilter _spainYearFilter = new(_spainVehiclesCategory, _yearFilter);
 
     public async Task SeedAsync()
     {
@@ -54,7 +58,6 @@ public class SeedTestDataService(
         }
 
         await SeedCountriesAsync();
-        await SeedVehicleBrandsAsync();
         await SeedAdsAsync();
     }
 
@@ -88,24 +91,20 @@ public class SeedTestDataService(
             return;
         }
 
+        _chileVehiclesCategory.AddFilter(_chileBrandFilter);
+        _chileVehiclesCategory.AddFilter(_chileModelFilter);
         _chileVehiclesCategory.AddFilter(_chileYearFilter);
 
-        _chileVehiclesCategory.AddFilter(_chileVehicleBrandFilter);
-
         _chile.AddCategory(_chileVehiclesCategory);
+        _chile.AddCategory(_chileRealEstateCategory);
+
+        _spainVehiclesCategory.AddFilter(_spainBrandFilter);
+        _spainVehiclesCategory.AddFilter(_spainModelFilter);
+        _spainVehiclesCategory.AddFilter(_spainYearFilter);
+
+        _spain.AddCategory(_spainVehiclesCategory);
 
         await countryRepository.AddAsync([_chile, _spain]);
-    }
-
-    private async Task SeedVehicleBrandsAsync()
-    {
-        if (await vehicleBrandRepository.AnyAsync())
-        {
-            return;
-        }
-
-        _mercedesBenz.AddModel(_mercedesBenzC200Model);
-        await vehicleBrandRepository.AddAsync(_mercedesBenz);
     }
 
     private async Task SeedAdsAsync()
@@ -128,9 +127,9 @@ public class SeedTestDataService(
 
         ad.AddProperties(
             [
-                new AdProperty(ad, _vehicleBrandFilterType, _mercedesBenz.Id),
-                new AdProperty(ad, _vehicleModelFilterType, _mercedesBenzC200Model.Id),
-                new AdProperty(ad, _vehicleYearFilterType, 2023)
+                new AdProperty(ad, _brandFilter, "Mercedes Benz"),
+                new AdProperty(ad, _modelFilter, "C 200"),
+                new AdProperty(ad, _yearFilter, 2023)
             ]
         );
 
@@ -153,7 +152,7 @@ public class SeedTestDataService(
                     _ => throw new Exception()
                 });
 
-                return new Property(x.FilterTypeId, convertedValue);
+                return new Property(x.FilterId, convertedValue);
 
             }).ToList()
         );

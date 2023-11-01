@@ -6,7 +6,7 @@ public record SearchUseCaseResponse(
     string CountryId,
     string CategoryId,
     Dictionary<string, string> Filters,
-    List<Facet> Facets,
+    List<Facet>? Facets,
     long AdCount,
     Ad[] Ads) : IUseCaseResponse;
 

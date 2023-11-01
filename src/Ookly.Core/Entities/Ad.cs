@@ -88,7 +88,7 @@ public class Ad(
 
 public class AdProperty(
     Guid adId,
-    string filterTypeId,
+    string filterId,
     string? textValue = null,
     decimal? numericValue = null,
     bool? booleanValue = null) : Entity<Guid>(Guid.NewGuid())
@@ -120,7 +120,7 @@ public class AdProperty(
     public Guid AdId { get; private set; } = adId;
     public Ad Ad { get; private set; } = default!;
 
-    public string FilterTypeId { get; private set; } = filterTypeId;
+    public string FilterId { get; private set; } = filterId;
     public Filter FilterType { get; private set; } = default!;
 
     public string? TextValue { get; private set; } = textValue;

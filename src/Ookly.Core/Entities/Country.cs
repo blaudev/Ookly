@@ -11,19 +11,19 @@ public class Country(string id) : Entity<string>(id), IAggregateRoot
 
 }
 
-public class CountryCategory(string countryId, string categoryTypeId) : Entity<string>($"{countryId}_{categoryTypeId}")
+public class CountryCategory(string countryId, string categoryId) : Entity<string>($"{countryId}_{categoryId}")
 {
-    public CountryCategory(Country country, Category categoryType) : this(country.Id, categoryType.Id)
+    public CountryCategory(Country country, Category category) : this(country.Id, category.Id)
     {
         Country = country;
-        CategoryType = categoryType;
+        Category = category;
     }
 
     public string CountryId { get; private set; } = countryId;
     public Country Country { get; private set; } = default!;
 
-    public string CategoryTypeId { get; private set; } = categoryTypeId;
-    public Category CategoryType { get; private set; } = default!;
+    public string CategoryId { get; private set; } = categoryId;
+    public Category Category { get; private set; } = default!;
 
     public List<CategoryFilter> Filters { get; private set; } = [];
 
@@ -31,4 +31,19 @@ public class CountryCategory(string countryId, string categoryTypeId) : Entity<s
     {
         Filters.Add(filter);
     }
+}
+
+public class CategoryFilter(string categoryId, string filterId) : Entity<string>($"{categoryId}_{filterId}")
+{
+    public CategoryFilter(CountryCategory category, Filter filter) : this(category.Id, filter.Id)
+    {
+        Category = category;
+        Filter = filter;
+    }
+
+    public string CategoryId { get; private set; } = categoryId;
+    public CountryCategory Category { get; private set; } = default!;
+
+    public string FilterId { get; private set; } = filterId;
+    public Filter Filter { get; private set; } = default!;
 }

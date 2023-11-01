@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231101111134_Rename")]
+    partial class Rename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,7 +90,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Property<bool?>("BooleanValue")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("FilterId")
+                    b.Property<string>("FilterTypeId")
                         .IsRequired()
                         .HasColumnType("character varying(20)");
 
@@ -101,7 +104,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("AdId");
 
-                    b.HasIndex("FilterId");
+                    b.HasIndex("FilterTypeId");
 
                     b.ToTable("AdProperty");
                 });
@@ -190,6 +193,33 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.ToTable("Filter");
                 });
 
+            modelBuilder.Entity("Ookly.Core.Entities.VehicleBrand", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VehicleBrands");
+                });
+
+            modelBuilder.Entity("Ookly.Core.Entities.VehicleModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("VehicleBrandId")
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleBrandId");
+
+                    b.ToTable("VehicleModels");
+                });
+
             modelBuilder.Entity("Ookly.Core.Entities.Ad", b =>
                 {
                     b.HasOne("Ookly.Core.Entities.CountryCategory", "Category")
@@ -218,8 +248,8 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .IsRequired();
 
                     b.HasOne("Ookly.Core.Entities.Filter", "FilterType")
-                        .WithMany("AdProperties")
-                        .HasForeignKey("FilterId")
+                        .WithMany()
+                        .HasForeignKey("FilterTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -266,6 +296,13 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Ookly.Core.Entities.VehicleModel", b =>
+                {
+                    b.HasOne("Ookly.Core.Entities.VehicleBrand", null)
+                        .WithMany("VehicleModels")
+                        .HasForeignKey("VehicleBrandId");
+                });
+
             modelBuilder.Entity("Ookly.Core.Entities.Ad", b =>
                 {
                     b.Navigation("Properties");
@@ -288,9 +325,12 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.Entities.Filter", b =>
                 {
-                    b.Navigation("AdProperties");
-
                     b.Navigation("CategoryFilters");
+                });
+
+            modelBuilder.Entity("Ookly.Core.Entities.VehicleBrand", b =>
+                {
+                    b.Navigation("VehicleModels");
                 });
 #pragma warning restore 612, 618
         }

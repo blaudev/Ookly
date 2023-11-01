@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using Ookly.Core.Entities;
 
 using System.Reflection;
@@ -16,8 +17,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public virtual DbSet<Ad> Ads => Set<Ad>();
     public virtual DbSet<Country> Countries => Set<Country>();
-    public virtual DbSet<VehicleBrand> VehicleBrands => Set<VehicleBrand>();
-    public virtual DbSet<VehicleModel> VehicleModels => Set<VehicleModel>();
+    public virtual DbSet<Ad> Ads => Set<Ad>();
 }
