@@ -2,11 +2,11 @@
 
 public class Country(string id) : Entity<string>(id), IAggregateRoot
 {
-    public List<CountryCategory> Categories { get; private set; } = [];
+    public List<CountryCategory> CountryCategories { get; private set; } = [];
 
     public void AddCategory(CountryCategory category)
     {
-        Categories.Add(category);
+        CountryCategories.Add(category);
     }
 
 }

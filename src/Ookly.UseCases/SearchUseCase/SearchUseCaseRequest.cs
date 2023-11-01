@@ -4,8 +4,8 @@ using Ookly.Core.Entities;
 
 namespace Ookly.UseCases.SearchUseCase;
 
-public class SearchUseCaseRequest(CountryCategory category, Dictionary<string, string> filters) : IUseCaseRequest
+public class SearchUseCaseRequest(CountryCategory countryCategory, Dictionary<string, string> filterValues) : IUseCaseRequest
 {
-    public CountryCategory Category { get; private set; } = category;
-    public Dictionary<string, string> Filters { get; private set; } = filters;
+    public CountryCategory CountryCategory { get; private set; } = countryCategory;
+    public Dictionary<string, string> FilterValues { get; private set; } = filterValues;
 }

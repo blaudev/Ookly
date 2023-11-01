@@ -9,7 +9,7 @@ public record Country(string Id, List<Category> Categories)
 {
     public static Country Map(Core.Entities.Country country)
     {
-        return new Country(country.Id, country.Categories.Select(Category.Map).ToList());
+        return new Country(country.Id, country.CountryCategories.Select(Category.Map).ToList());
     }
 
     public static List<Country> Map(List<Core.Entities.Country> countries)
