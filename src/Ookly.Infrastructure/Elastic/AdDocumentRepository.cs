@@ -56,7 +56,6 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
             return values;
         }).ToList();
 
-
         return new List<Ad>();
     }
 

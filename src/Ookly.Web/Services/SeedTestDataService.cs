@@ -114,7 +114,7 @@ public class SeedTestDataService(
             return;
         }
 
-        var ad = new Ad
+        var mercedesC200 = new Ad
         (
             AdStatus.Active,
             "",
@@ -125,38 +125,37 @@ public class SeedTestDataService(
             10000000
         );
 
-        ad.AddProperties(
+        mercedesC200.AddProperties(
             [
-                new AdProperty(ad, _brandFilter, "Mercedes Benz"),
-                new AdProperty(ad, _modelFilter, "C 200"),
-                new AdProperty(ad, _yearFilter, 2023)
+                new AdProperty(mercedesC200, _brandFilter, "Mercedes Benz"),
+                new AdProperty(mercedesC200, _modelFilter, "C 200"),
+                new AdProperty(mercedesC200, _yearFilter, 2023)
             ]
         );
 
-        await adRepository.AddAsync(ad);
+        await adRepository.AddAsync(mercedesC200);
+        await adDocumentRepository.AddAsync(mercedesC200);
 
-        var adDocument = new AdDocument(
-            ad.Id,
-            ad.CountryId,
-            ad.CategoryId,
-            ad.PictureUrl,
-            ad.Title,
-            ad.Description,
-            ad.Price,
-            ad.Properties.ToDictionary(x => x.FilterId, x =>
-            {
-                var convertedValue = (object)(x switch
-                {
-                    { TextValue: string value } => value,
-                    { NumericValue: decimal value } => value,
-                    _ => throw new Exception()
-                });
-
-                return convertedValue;
-
-            })
+        var mercedesA180 = new Ad
+        (
+            AdStatus.Active,
+            "",
+            _chile,
+            _chileVehiclesCategory,
+            "",
+            "Mercedes Benz A 180 del 2021",
+            5000000
         );
 
-        await adDocumentRepository.AddAsync(ad);
+        mercedesA180.AddProperties(
+            [
+                new AdProperty(mercedesA180, _brandFilter, "Mercedes Benz"),
+                new AdProperty(mercedesA180, _modelFilter, "A 180"),
+                new AdProperty(mercedesA180, _yearFilter, 2021)
+            ]
+        );
+
+        await adRepository.AddAsync(mercedesA180);
+        await adDocumentRepository.AddAsync(mercedesA180);
     }
 }
