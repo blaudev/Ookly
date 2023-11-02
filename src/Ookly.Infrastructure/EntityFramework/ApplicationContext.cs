@@ -17,6 +17,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public virtual DbSet<Country> Countries => Set<Country>();
-    public virtual DbSet<Ad> Ads => Set<Ad>();
+    public DbSet<Country> Countries => Set<Country>();
+    public DbSet<Ad> Ads => Set<Ad>();
 }

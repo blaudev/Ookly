@@ -10,7 +10,7 @@ public class CountryRepository(ApplicationContext context) : Repository<Country>
     public async Task<List<Country>> GetCountryStatsAsync()
     {
         return await context.Countries
-            .Include(i => i.CountryCategories.OrderBy(o => o.Id))
+            .Include(i => i.CountryCategories.OrderBy(o => o.Order))
             .OrderBy(o => o.Id)
             .ToListAsync();
     }
@@ -18,8 +18,9 @@ public class CountryRepository(ApplicationContext context) : Repository<Country>
     public async Task<Country> GetCountryWithCountryCategoriesAndFiltersAsync(string countryId)
     {
         return await context.Countries
-            .Include(i => i.CountryCategories.OrderBy(o => o.Id))
-                .ThenInclude(i => i.CategoryFilters.OrderBy(o => o.Id))
+            .Include(i => i.CountryCategories.OrderBy(o => o.Order))
+                .ThenInclude(i => i.CategoryFilters.OrderBy(o => o.Filter.Order))
+                    .ThenInclude(i => i.Filter)
             .Where(i => i.Id == countryId)
             .FirstAsync();
     }

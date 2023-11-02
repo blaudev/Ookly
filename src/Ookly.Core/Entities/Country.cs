@@ -11,9 +11,9 @@ public class Country(string id) : Entity<string>(id), IAggregateRoot
 
 }
 
-public class CountryCategory(string countryId, string categoryId) : Entity<string>($"{countryId}_{categoryId}")
+public class CountryCategory(string countryId, string categoryId, int order) : Entity<string>($"{countryId}_{categoryId}")
 {
-    public CountryCategory(Country country, Category category) : this(country.Id, category.Id)
+    public CountryCategory(Country country, Category category, int order) : this(country.Id, category.Id, order)
     {
         Country = country;
         Category = category;
@@ -25,6 +25,8 @@ public class CountryCategory(string countryId, string categoryId) : Entity<strin
     public string CategoryId { get; private set; } = categoryId;
     public Category Category { get; private set; } = default!;
 
+    public int Order { get; private set; } = order;
+
     public List<CategoryFilter> CategoryFilters { get; private set; } = [];
 
     public void AddCategoryFilter(CategoryFilter filter)
@@ -33,16 +35,16 @@ public class CountryCategory(string countryId, string categoryId) : Entity<strin
     }
 }
 
-public class CategoryFilter(string categoryId, string filterId) : Entity<string>($"{categoryId}_{filterId}")
+public class CategoryFilter(string countryCategoryId, string filterId) : Entity<string>($"{countryCategoryId}_{filterId}")
 {
-    public CategoryFilter(CountryCategory category, Filter filter) : this(category.Id, filter.Id)
+    public CategoryFilter(CountryCategory countryCategory, Filter filter) : this(countryCategory.Id, filter.Id)
     {
-        Category = category;
+        CountryCategory = countryCategory;
         Filter = filter;
     }
 
-    public string CategoryId { get; private set; } = categoryId;
-    public CountryCategory Category { get; private set; } = default!;
+    public string CountryCategoryId { get; private set; } = countryCategoryId;
+    public CountryCategory CountryCategory { get; private set; } = default!;
 
     public string FilterId { get; private set; } = filterId;
     public Filter Filter { get; private set; } = default!;

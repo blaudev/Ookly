@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231102104007_Add_order")]
+    partial class Add_order
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +126,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
-                    b.Property<string>("CountryCategoryId")
+                    b.Property<string>("CategoryId")
                         .IsRequired()
                         .HasColumnType("character varying(40)");
 
@@ -133,7 +136,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryCategoryId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("FilterId");
 
@@ -164,9 +167,6 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Property<string>("CountryId")
                         .IsRequired()
                         .HasColumnType("character varying(20)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -245,9 +245,9 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.Entities.CategoryFilter", b =>
                 {
-                    b.HasOne("Ookly.Core.Entities.CountryCategory", "CountryCategory")
+                    b.HasOne("Ookly.Core.Entities.CountryCategory", "Category")
                         .WithMany("CategoryFilters")
-                        .HasForeignKey("CountryCategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -257,7 +257,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CountryCategory");
+                    b.Navigation("Category");
 
                     b.Navigation("Filter");
                 });

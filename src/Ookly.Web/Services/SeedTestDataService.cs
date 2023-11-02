@@ -25,14 +25,14 @@ public class SeedTestDataService(
     private static readonly Category _vehiclesCategory = new("vehicles");
     private static readonly Category _realEstateCategory = new("real-estate");
 
-    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategory);
-    private static readonly CountryCategory _chileRealEstateCategory = new(_chile, _realEstateCategory);
+    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategory, 1);
+    private static readonly CountryCategory _chileRealEstateCategory = new(_chile, _realEstateCategory, 2);
 
-    private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory);
+    private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory, 1);
 
-    private static readonly Filter _brandFilter = new("brand", FilterType.Text, _vehiclesCategory);
-    private static readonly Filter _modelFilter = new("model", FilterType.Text, _vehiclesCategory);
-    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, _vehiclesCategory);
+    private static readonly Filter _brandFilter = new("brand", FilterType.Text, SortType.FilterIdAsc, 1, _vehiclesCategory);
+    private static readonly Filter _modelFilter = new("model", FilterType.Text, SortType.FilterIdAsc, 2, _vehiclesCategory);
+    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, SortType.FilterIdDesc, 3, _vehiclesCategory);
 
     private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
     private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);

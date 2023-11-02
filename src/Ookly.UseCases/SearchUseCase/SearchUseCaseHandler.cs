@@ -8,7 +8,8 @@ public class SearchUseCaseHandler(IAdDocumentRepository repository) : IUseCaseHa
 {
     public async Task<SearchUseCaseResponse> HandleAsync(SearchUseCaseRequest request)
     {
-        var s = await repository.SearchAsync(request.CountryCategory);
+        var filters = request.CountryCategory.CategoryFilters.Select(f => f.Filter).ToList();
+        var s = await repository.SearchAsync(filters);
 
         request.CountryCategory.CategoryFilters.ToDictionary(k => k.FilterId, v => v);
 

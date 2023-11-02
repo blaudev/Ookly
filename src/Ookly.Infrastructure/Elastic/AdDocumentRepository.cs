@@ -11,7 +11,7 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 {
     private readonly ElasticOptions options = elasticOptions.Value;
 
-    public async Task<List<Ad>> SearchAsync(CountryCategory countryCategory)
+    public async Task<List<Ad>> SearchAsync(List<Core.Entities.Filter> filters)
     {
         var sd = new SearchDescriptor<Ad>();
 
@@ -24,13 +24,13 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
                 .Nested("props", n => n
                     .Path(p => p.Properties)
                     .Aggregations(aa => aa
-                        .Terms("properties-names", t => t
+                        .Terms("names", t => t
                             .Field(p => p.Properties.Suffix("filterId"))
                             .Aggregations(aa => aa
-                                .Terms("text-values", t => t
+                                .Terms("text_values", t => t
                                     .Field(f => f.Properties.Suffix("textValue"))
                                 )
-                                .Terms("numeric-values", t => t
+                                .Terms("numeric_values", t => t
                                     .Field(f => f.Properties.Suffix("numericValue"))
                                 )
                             )
@@ -42,24 +42,29 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
 
         var resp = await client.SearchAsync<Ad>(sd);
 
-        var p = resp.Aggregations.Nested("props");
-        var pn = p.Terms("properties-names");
-        //var pn = resp.Aggregations["properties-names"] as TermsAggregate<Ad>;
-        var r = pn.Buckets.Select(b =>
-        {
-            var name = b.Key;
-            var textValues = b.Terms("text-values").Buckets.Select(b => new { Key = b.Key, Value = b.DocCount }).ToList();
-            var numericValues = b.Terms("numeric-values").Buckets.Select(b => new { Key = b.Key, Value = b.DocCount }).ToList();
+        var aggregates = resp
+            .Aggregations
+            .Nested("props")
+            .Terms("names")
+            .Buckets
+            .ToDictionary(
+                k => k.Key,
+                v => v.Terms("text_values").Buckets
+                .Concat(v.Terms("numeric_values").Buckets)
+                .ToDictionary(k => k.Key, v => v.DocCount ?? 0)
+            );
 
-            var v = textValues.Concat(numericValues);
-            return new
-            {
-                Name = name,
-                Values = v
-                    .Select(b => new { Key = b.Key, Value = b.Value })
-                    .ToDictionary(k => k.Key, v => v.Value)
-            };
-        }).ToList();
+        var facets = filters
+            .ToDictionary(
+                k => k.Id,
+                v => v.SortType switch
+                {
+                    SortType.FilterIdAsc => aggregates[v.Id].OrderBy(o => o.Key),
+                    SortType.FilterIdDesc => aggregates[v.Id].OrderByDescending(o => o.Key),
+                    SortType.DocCountAsc => aggregates[v.Id].OrderBy(o => o.Value),
+                    SortType.DocCountDesc => aggregates[v.Id].OrderByDescending(o => o.Value),
+                    _ => throw new NotImplementedException(),
+                });
 
         return new List<Ad>();
     }
