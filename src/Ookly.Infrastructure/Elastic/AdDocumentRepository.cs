@@ -48,12 +48,17 @@ public class AdDocumentRepository(ElasticClient client, IOptions<ElasticOptions>
         var r = pn.Buckets.Select(b =>
         {
             var name = b.Key;
-            var textValues = b.Terms("text-values").Buckets.Select(b => (b.Key, b.DocCount)).ToList();
-            var numericValues = b.Terms("numeric-values").Buckets.Select(b => (b.Key, b.DocCount)).ToList();
+            var textValues = b.Terms("text-values").Buckets.Select(b => new { Key = b.Key, Value = b.DocCount }).ToList();
+            var numericValues = b.Terms("numeric-values").Buckets.Select(b => new { Key = b.Key, Value = b.DocCount }).ToList();
 
-            var values = textValues.Any() ? textValues : numericValues;
-
-            return values;
+            var v = textValues.Concat(numericValues);
+            return new
+            {
+                Name = name,
+                Values = v
+                    .Select(b => new { Key = b.Key, Value = b.Value })
+                    .ToDictionary(k => k.Key, v => v.Value)
+            };
         }).ToList();
 
         return new List<Ad>();
