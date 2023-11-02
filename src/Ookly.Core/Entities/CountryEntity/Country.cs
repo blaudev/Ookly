@@ -1,4 +1,7 @@
-﻿namespace Ookly.Core.Entities;
+﻿using Ookly.Core.Entities.CategoryEntity;
+using Ookly.Core.Entities.FilterEntity;
+
+namespace Ookly.Core.Entities.CountryEntity;
 
 public class Country(string id) : Entity<string>(id), IAggregateRoot
 {

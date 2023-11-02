@@ -1,6 +1,5 @@
 ﻿using Blau.UseCases;
-
-using Ookly.Core.Entities;
+using Ookly.Core.Entities.CountryEntity;
 
 namespace Ookly.UseCases.SearchUseCase;
 

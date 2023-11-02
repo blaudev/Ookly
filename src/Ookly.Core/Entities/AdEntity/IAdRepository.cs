@@ -1,6 +1,6 @@
-﻿using Ookly.Core.Entities;
+﻿using Ookly.Core.Interfaces;
 
-namespace Ookly.Core.Interfaces;
+namespace Ookly.Core.Entities.AdEntity;
 
 public interface IAdRepository : IRepository<Ad>
 {

@@ -1,4 +1,7 @@
-﻿namespace Ookly.Core.Entities;
+﻿using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.FilterEntity;
+
+namespace Ookly.Core.Entities.CategoryEntity;
 
 public class Category(string id) : Entity<string>(id)
 {

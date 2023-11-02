@@ -1,5 +1,7 @@
 ﻿using Blau.UseCases;
 
+using Ookly.Core.Services.SearchService.Models;
+
 namespace Ookly.UseCases.SearchUseCase;
 
 public record SearchUseCaseResponse(
@@ -9,10 +11,6 @@ public record SearchUseCaseResponse(
     List<Facet>? Facets,
     long AdCount,
     Ad[] Ads) : IUseCaseResponse;
-
-public record Facet(string Name, string FilterName, List<FacetItem> Items);
-
-public record FacetItem(string Text, string Value);
 
 public record Ad(
     int Id,

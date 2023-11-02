@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Ookly.Core.Entities;
-using Ookly.Core.Interfaces;
+using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CategoryEntity;
+using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Services.AdElasticIndexService;
 using Ookly.Infrastructure.EntityFramework;
 using Ookly.Infrastructure.Options;
 
@@ -15,7 +18,8 @@ public class SeedTestDataService(
     IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
     IAdRepository adRepository,
-    IAdDocumentRepository adDocumentRepository)
+    IElasticAdIndexService elasticAdIndexService
+)
 {
     private readonly DatabaseOptions options = dataOptions.Value;
 
@@ -79,12 +83,12 @@ public class SeedTestDataService(
 
     private async Task DeleteIndicesAsync()
     {
-        await adDocumentRepository.DeleteAdIndexAsync();
+        await elasticAdIndexService.DeleteIndexAsync();
     }
 
     private async Task CreateIndicesAsync()
     {
-        await adDocumentRepository.CreateIndexAsync();
+        await elasticAdIndexService.CreateIndexAsync();
     }
 
     private async Task SeedCountriesAsync()
@@ -126,7 +130,7 @@ public class SeedTestDataService(
         );
 
         await adRepository.AddAsync(mercedesA180);
-        await adDocumentRepository.AddAsync(mercedesA180);
+        await elasticAdIndexService.AddAdAsync(mercedesA180);
 
         mercedesC200.AddProperties(
             [
@@ -137,6 +141,6 @@ public class SeedTestDataService(
         );
 
         await adRepository.AddAsync(mercedesC200);
-        await adDocumentRepository.AddAsync(mercedesC200);
+        await elasticAdIndexService.AddAdAsync(mercedesC200);
     }
 }

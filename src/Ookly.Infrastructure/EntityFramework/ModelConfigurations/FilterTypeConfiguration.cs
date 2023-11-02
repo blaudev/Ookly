@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ookly.Core.Entities;
+using Ookly.Core.Entities.FilterEntity;
 
 namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 

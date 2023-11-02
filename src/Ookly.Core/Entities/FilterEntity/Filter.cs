@@ -1,4 +1,8 @@
-﻿namespace Ookly.Core.Entities;
+﻿using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CategoryEntity;
+using Ookly.Core.Entities.CountryEntity;
+
+namespace Ookly.Core.Entities.FilterEntity;
 
 public enum FilterType
 {

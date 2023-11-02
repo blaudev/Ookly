@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using Ookly.Core.Interfaces;
+using Ookly.Core.Entities.CountryEntity;
 using Ookly.UseCases.SearchUseCase;
 
 namespace Ookly.Web.ModelBinders;
@@ -18,11 +18,8 @@ public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepositor
 
         var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(countryId);
 
-        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.CategoryId == categoryId);
-        if (countryCategory == null)
-        {
-            throw new ValidationException(categoryId);
-        }
+        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.CategoryId == categoryId)
+            ?? throw new ValidationException(categoryId);
 
         var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();
         var filterValues = GetFilterValues(categoryFilterIds, bindingContext);

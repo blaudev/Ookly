@@ -1,6 +1,6 @@
-﻿using Ookly.Core.Entities;
+﻿using Ookly.Core.Interfaces;
 
-namespace Ookly.Core.Interfaces;
+namespace Ookly.Core.Entities.CountryEntity;
 
 public interface ICountryRepository : IRepository<Country>
 {

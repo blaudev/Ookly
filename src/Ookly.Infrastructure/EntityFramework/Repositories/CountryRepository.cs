@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Ookly.Core.Entities;
-using Ookly.Core.Interfaces;
+using Ookly.Core.Entities.CountryEntity;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 

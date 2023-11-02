@@ -1,4 +1,7 @@
-﻿namespace Ookly.Core.Entities;
+﻿using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.FilterEntity;
+
+namespace Ookly.Core.Entities.AdEntity;
 
 public enum AdStatus
 {
@@ -100,16 +103,16 @@ public class AdProperty(
 
         switch (filterType, value)
         {
-            case ({ ValueType: Entities.FilterType.Text }, string textValue):
+            case ({ ValueType: FilterEntity.FilterType.Text }, string textValue):
                 TextValue = textValue;
                 break;
-            case ({ ValueType: Entities.FilterType.Numeric }, int numericValue):
+            case ({ ValueType: FilterEntity.FilterType.Numeric }, int numericValue):
                 NumericValue = numericValue;
                 break;
-            case ({ ValueType: Entities.FilterType.Numeric }, long numericValue):
+            case ({ ValueType: FilterEntity.FilterType.Numeric }, long numericValue):
                 NumericValue = numericValue;
                 break;
-            case ({ ValueType: Entities.FilterType.Boolean }, bool booleanValue):
+            case ({ ValueType: FilterEntity.FilterType.Boolean }, bool booleanValue):
                 BooleanValue = booleanValue;
                 break;
             default:

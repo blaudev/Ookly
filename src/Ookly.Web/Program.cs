@@ -1,6 +1,10 @@
-using Ookly.Core.Interfaces;
+using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Services.AdElasticIndexService;
+using Ookly.Core.Services.AdSearchService;
 using Ookly.Infrastructure;
 using Ookly.Infrastructure.Elastic;
+using Ookly.Infrastructure.Elastic.Services;
 using Ookly.Infrastructure.EntityFramework.Repositories;
 using Ookly.UseCases.HomeUseCase;
 using Ookly.UseCases.SearchUseCase;
@@ -14,7 +18,9 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddElastic(builder.Configuration);
 
-builder.Services.AddSingleton<IAdDocumentRepository, AdDocumentRepository>();
+builder.Services.AddSingleton<IAdSearchService, ElasticAdSearchService>();
+builder.Services.AddSingleton<IElasticAdIndexService, ElasticAdIndexService>();
+
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 

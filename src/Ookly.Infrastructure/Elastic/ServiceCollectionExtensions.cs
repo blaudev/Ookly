@@ -6,8 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Nest;
-
-using Ookly.Core.Entities;
+using Ookly.Core.Entities.AdEntity;
 
 namespace Ookly.Infrastructure.Elastic;
 

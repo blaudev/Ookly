@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-using Ookly.Core.Entities;
-
+using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CountryEntity;
 using System.Reflection;
 
 namespace Ookly.Infrastructure.EntityFramework;

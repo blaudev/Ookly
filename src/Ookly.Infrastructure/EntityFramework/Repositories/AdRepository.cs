@@ -1,5 +1,4 @@
-﻿using Ookly.Core.Entities;
-using Ookly.Core.Interfaces;
+﻿using Ookly.Core.Entities.AdEntity;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
