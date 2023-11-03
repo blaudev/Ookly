@@ -11,59 +11,48 @@ namespace Ookly.Infrastructure.Elastic.Services;
 
 public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
 {
+
+    private readonly string _aggregatePropertiesName = "props";
+    private readonly string _aggregateNamesName = "names";
+    private readonly string _aggregateTextValues = "text_values";
+    private readonly string _aggregateNumericValues = "numeric_values";
+
     public async Task<SearchResponse> SearchAsync(List<FilterEntity.Filter> filters)
     {
+        var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
+
         var sd = new SearchDescriptor<Ad>();
 
         sd.Size(10);
-
-        sd.Query(q => q.MatchAll());
-
-        sd = sd
-            .Aggregations(a => a
-                .Nested("props", n => n
-                    .Path(p => p.Properties)
-                    .Aggregations(aa => aa
-                        .Terms("names", t => t
-                            .Field(p => p.Properties.Suffix("filterId"))
-                            .Aggregations(aa => aa
-                                .Terms("text_values", t => t
-                                    .Field(f => f.Properties.Suffix("textValue"))
-                                )
-                                .Terms("numeric_values", t => t
-                                    .Field(f => f.Properties.Suffix("numericValue"))
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-
-        var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
+        sd = BuildQuery(sd);
+        sd = BuildAggregates(sd);
 
         var response = await client.SearchAsync<Ad>(sd);
+
         var buckets = GetBuckets(response);
-        var filterBuckets = OnlyFilterBuckets(buckets, filters);
+        var filterBuckets = ExcludeFilterBuckets(buckets, filters);
         var facets = GetFacets(filterBuckets, filters);
         var sortedFacets = OrderFacets(facets, filterSorts);
 
         return new SearchResponse(sortedFacets);
     }
 
-    private static SearchDescriptor<Ad> BuildAggregates(SearchDescriptor<Ad> descriptor)
-    {
-        return descriptor
+    private static SearchDescriptor<Ad> BuildQuery(SearchDescriptor<Ad> descriptor) =>
+        descriptor.Query(q => q.MatchAll());
+
+    private SearchDescriptor<Ad> BuildAggregates(SearchDescriptor<Ad> descriptor) =>
+        descriptor
             .Aggregations(a => a
-                .Nested("props", n => n
+                .Nested(_aggregatePropertiesName, n => n
                     .Path(p => p.Properties)
                     .Aggregations(aa => aa
-                        .Terms("names", t => t
+                        .Terms(_aggregateNamesName, t => t
                             .Field(p => p.Properties.Suffix("filterId"))
                             .Aggregations(aa => aa
-                                .Terms("text_values", t => t
+                                .Terms(_aggregateTextValues, t => t
                                     .Field(f => f.Properties.Suffix("textValue"))
                                 )
-                                .Terms("numeric_values", t => t
+                                .Terms(_aggregateNumericValues, t => t
                                     .Field(f => f.Properties.Suffix("numericValue"))
                                 )
                             )
@@ -71,34 +60,40 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
                     )
                 )
             );
-    }
 
-    private static List<Facet> GetFacets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters)
-    {
-        var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
+    private List<KeyedBucket<string>> GetBuckets(ISearchResponse<Ad> response) =>
+        [.. response
+            .Aggregations
+            .Nested(_aggregatePropertiesName)
+            .Terms(_aggregateNamesName)
+            .Buckets
+        ];
 
-        return buckets
+    private static IEnumerable<KeyedBucket<string>> ExcludeFilterBuckets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters) =>
+        buckets.Where(q => filters.Any(f => f.Id == q.Key));
+
+    private List<Facet> GetFacets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters) =>
+        [.. buckets
             .Select(b =>
                 new Facet
                 (
                     b.Key,
                     [
-                        .. GetFacetItems(b, "text_values"),
-                        .. GetFacetItems(b, "numeric_values"),
+                        .. GetFacetItems(b, _aggregateTextValues),
+                        .. GetFacetItems(b, _aggregateNumericValues),
                     ]
                 )
             )
-            .ToList();
-    }
+        ];
 
-    private static List<Facet> OrderFacets(List<Facet> facets, Dictionary<string, SortType> filterSorts)
-    {
-        return facets.Select(f => f with { Items = OrderItems(f.Items, filterSorts[f.FilterId]) }).ToList();
-    }
+    private static IEnumerable<FacetItem> GetFacetItems(KeyedBucket<string> bucket, string key) =>
+        bucket.Terms(key).Buckets.Select(i => new FacetItem(i.Key, i.DocCount ?? 0));
 
-    private static List<FacetItem> OrderItems(IEnumerable<FacetItem> items, SortType sortType)
-    {
-        return sortType switch
+    private static List<Facet> OrderFacets(List<Facet> facets, Dictionary<string, SortType> filterSorts) =>
+        [.. facets.Select(f => f with { Items = OrderItems(f.Items, filterSorts[f.FilterId]) })];
+
+    private static List<FacetItem> OrderItems(IEnumerable<FacetItem> items, SortType sortType) =>
+        sortType switch
         {
             SortType.FilterIdAsc => [.. items.OrderBy(o => o.Key)],
             SortType.FilterIdDesc => [.. items.OrderByDescending(o => o.Key)],
@@ -106,32 +101,10 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
             SortType.DocCountDesc => [.. items.OrderByDescending(o => o.Count)],
             _ => throw new NotImplementedException(),
         };
-    }
-
-    private static List<KeyedBucket<string>> GetBuckets(ISearchResponse<Ad> response)
-    {
-        return response
-            .Aggregations
-            .Nested("props")
-            .Terms("names")
-            .Buckets
-            .ToList();
-    }
-
-    private static IEnumerable<KeyedBucket<string>> OnlyFilterBuckets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters)
-    {
-        return buckets.Where(q => filters.Any(f => f.Id == q.Key));
-    }
-
-    private static IEnumerable<FacetItem> GetFacetItems(KeyedBucket<string> bucket, string key)
-    {
-        return bucket.Terms(key).Buckets.Select(i => new FacetItem(i.Key, i.DocCount ?? 0));
-    }
 
     private static QueryContainer BuildQuery()
     {
         var query = new QueryContainer();
-
         return query;
     }
 }
