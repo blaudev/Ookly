@@ -1,5 +1,5 @@
-using Ookly.Core.Entities.AdEntity;
 using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdElasticIndexService;
 using Ookly.Core.Services.AdSearchService;
 using Ookly.Infrastructure;
@@ -21,7 +21,7 @@ builder.Services.AddElastic(builder.Configuration);
 builder.Services.AddSingleton<IAdSearchService, ElasticAdSearchService>();
 builder.Services.AddSingleton<IElasticAdIndexService, ElasticAdIndexService>();
 
-builder.Services.AddScoped<IAdRepository, AdRepository>();
+builder.Services.AddScoped<IListingRepository, AdRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
 builder.Services.AddScoped<SeedTestDataService>();

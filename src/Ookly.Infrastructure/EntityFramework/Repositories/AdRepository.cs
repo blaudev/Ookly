@@ -1,10 +1,10 @@
-﻿using Ookly.Core.Entities.AdEntity;
+﻿using Ookly.Core.Entities.ListingEntity;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class AdRepository(ApplicationContext context) : Repository<Ad>(context), IAdRepository
+public class AdRepository(ApplicationContext context) : Repository<Listing>(context), IListingRepository
 {
-    public Task<List<Ad>> SearchAsync(Dictionary<string, string> filters)
+    public Task<List<Listing>> SearchAsync(Dictionary<string, string> filters)
     {
         throw new NotImplementedException();
     }

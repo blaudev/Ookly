@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ookly.Core.Entities.AdEntity;
+
+using Ookly.Core.Entities.ListingEntity;
 
 namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 
-public class AdConfiguration : IEntityTypeConfiguration<Ad>
+public class AdConfiguration : IEntityTypeConfiguration<Listing>
 {
-    public void Configure(EntityTypeBuilder<Ad> builder)
+    public void Configure(EntityTypeBuilder<Listing> builder)
     {
         builder.Property(p => p.SourceUrl)
             .HasMaxLength(300)

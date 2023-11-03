@@ -1,7 +1,7 @@
 ﻿using Nest;
 
-using Ookly.Core.Entities.AdEntity;
 using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdSearchService;
 using Ookly.Core.Services.SearchService.Models;
 
@@ -21,13 +21,13 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     {
         var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
 
-        var sd = new SearchDescriptor<Ad>();
+        var sd = new SearchDescriptor<Listing>();
 
         sd.Size(10);
         sd = BuildQuery(sd);
         sd = BuildAggregates(sd, []);
 
-        var response = await client.SearchAsync<Ad>(sd);
+        var response = await client.SearchAsync<Listing>(sd);
 
         var buckets = GetBuckets(response);
         var filterBuckets = ExcludeFilterBuckets(buckets, filters);
@@ -37,13 +37,13 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
         return new SearchResponse(sortedFacets);
     }
 
-    private static SearchDescriptor<Ad> BuildQuery(SearchDescriptor<Ad> descriptor) =>
+    private static SearchDescriptor<Listing> BuildQuery(SearchDescriptor<Listing> descriptor) =>
         descriptor.Query(q => q.MatchAll());
 
     private List<string> GetExcludeAggregations(List<FilterEntity.Filter> filters) =>
         [.. filters.Select(f => f.Id)];
 
-    private SearchDescriptor<Ad> BuildAggregates(SearchDescriptor<Ad> descriptor, List<string> exclude) =>
+    private SearchDescriptor<Listing> BuildAggregates(SearchDescriptor<Listing> descriptor, List<string> exclude) =>
         descriptor
             .Aggregations(a => a
                 .Nested(_aggregatePropertiesName, n => n
@@ -65,7 +65,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
                 )
             );
 
-    private List<KeyedBucket<string>> GetBuckets(ISearchResponse<Ad> response) =>
+    private List<KeyedBucket<string>> GetBuckets(ISearchResponse<Listing> response) =>
         [.. response
             .Aggregations
             .Nested(_aggregatePropertiesName)

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ookly.Core.Entities.AdEntity;
+
 using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.ListingEntity;
+
 using System.Reflection;
 
 namespace Ookly.Infrastructure.EntityFramework;
@@ -17,5 +19,5 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     }
 
     public DbSet<Country> Countries => Set<Country>();
-    public DbSet<Ad> Ads => Set<Ad>();
+    public DbSet<Listing> Listings => Set<Listing>();
 }

@@ -1,6 +1,6 @@
-﻿using Ookly.Core.Entities.AdEntity;
-using Ookly.Core.Entities.CategoryEntity;
+﻿using Ookly.Core.Entities.CategoryEntity;
 using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.ListingEntity;
 
 namespace Ookly.Core.Entities.FilterEntity;
 
@@ -40,5 +40,5 @@ public class Filter(string id, FilterType valueType, SortType sortType, int orde
     public Filter? Parent { get; private set; } = default!;
 
     public List<CategoryFilter> CategoryFilters { get; private set; } = [];
-    public List<AdProperty> AdProperties { get; private set; } = [];
+    public List<ListingDetail> AdProperties { get; private set; } = [];
 }

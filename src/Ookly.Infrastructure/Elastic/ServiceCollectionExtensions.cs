@@ -6,7 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Nest;
-using Ookly.Core.Entities.AdEntity;
+
+using Ookly.Core.Entities.ListingEntity;
 
 namespace Ookly.Infrastructure.Elastic;
 
@@ -19,13 +20,13 @@ public static partial class ServiceCollectionExtensions
 
         var settings = new ConnectionSettings(pool)
             .DisableDirectStreaming()
-            .DefaultMappingFor<Ad>(x => x
+            .DefaultMappingFor<Listing>(x => x
                 .IndexName(options.Index)
                 .IdProperty("Id")
                 .Ignore(i => i.Country)
                 .Ignore(i => i.Category)
             )
-            .DefaultMappingFor<AdProperty>(x => x
+            .DefaultMappingFor<ListingDetail>(x => x
                 .Ignore(i => i.Ad)
                 .Ignore(i => i.FilterType)
             );

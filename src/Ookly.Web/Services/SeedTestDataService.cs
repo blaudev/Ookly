@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Ookly.Core.Entities.AdEntity;
 using Ookly.Core.Entities.CategoryEntity;
 using Ookly.Core.Entities.CountryEntity;
 using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdElasticIndexService;
 using Ookly.Infrastructure.EntityFramework;
 using Ookly.Infrastructure.Options;
@@ -17,7 +17,7 @@ public class SeedTestDataService(
     ApplicationContext context,
     IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
-    IAdRepository adRepository,
+    IListingRepository adRepository,
     IElasticAdIndexService elasticAdIndexService
 )
 {
@@ -46,8 +46,8 @@ public class SeedTestDataService(
     private static readonly CategoryFilter _spainModelFilter = new(_spainVehiclesCategory, _modelFilter);
     private static readonly CategoryFilter _spainYearFilter = new(_spainVehiclesCategory, _yearFilter);
 
-    private static readonly Ad mercedesA180 = new(AdStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz A 180 del 2021", 5000000);
-    private static readonly Ad mercedesC200 = new(AdStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz C 200 del 2023", 10000000);
+    private static readonly Listing mercedesA180 = new(ListingStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz A 180 del 2021", 5000000);
+    private static readonly Listing mercedesC200 = new(ListingStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz C 200 del 2023", 10000000);
 
     public async Task SeedAsync()
     {
@@ -123,9 +123,9 @@ public class SeedTestDataService(
 
         mercedesA180.AddProperties(
             [
-                new AdProperty(mercedesA180, _brandFilter, "Mercedes Benz"),
-                new AdProperty(mercedesA180, _modelFilter, "A 180"),
-                new AdProperty(mercedesA180, _yearFilter, 2021)
+                new ListingDetail(mercedesA180, _brandFilter, "Mercedes Benz"),
+                new ListingDetail(mercedesA180, _modelFilter, "A 180"),
+                new ListingDetail(mercedesA180, _yearFilter, 2021)
             ]
         );
 
@@ -134,9 +134,9 @@ public class SeedTestDataService(
 
         mercedesC200.AddProperties(
             [
-                new AdProperty(mercedesC200, _brandFilter, "Mercedes Benz"),
-                new AdProperty(mercedesC200, _modelFilter, "C 200"),
-                new AdProperty(mercedesC200, _yearFilter, 2023)
+                new ListingDetail(mercedesC200, _brandFilter, "Mercedes Benz"),
+                new ListingDetail(mercedesC200, _modelFilter, "C 200"),
+                new ListingDetail(mercedesC200, _yearFilter, 2023)
             ]
         );
 

@@ -2,7 +2,7 @@
 
 using Nest;
 
-using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdElasticIndexService;
 
 namespace Ookly.Infrastructure.Elastic;
@@ -14,13 +14,13 @@ public class ElasticAdIndexService(ElasticClient client, IOptions<ElasticOptions
     public async Task<bool> CreateIndexAsync()
     {
         var map = await client.Indices.CreateAsync(options.Index, c => c
-            .Map<Ad>(m => m
+            .Map<Listing>(m => m
                 .AutoMap()
                 .Properties(ps => ps
                     .Text(p => p.Name(n => n.Title).Analyzer("spanish"))
                     .Keyword(p => p.Name(n => n.CountryId))
                     .Keyword(p => p.Name(n => n.CategoryId))
-                    .Nested<AdProperty>(n => n
+                    .Nested<ListingDetail>(n => n
                         .Name(n => n.Properties)
                         .Properties(ps => ps
                             .Keyword(p => p.Name(n => n.FilterId))
@@ -42,7 +42,7 @@ public class ElasticAdIndexService(ElasticClient client, IOptions<ElasticOptions
         return response.IsValid;
     }
 
-    public async Task<bool> AddAdAsync(Ad ad)
+    public async Task<bool> AddAdAsync(Listing ad)
     {
         var response = await client.IndexAsync(ad, i => i.Index(options.Index));
         return response.IsValid;
