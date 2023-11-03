@@ -34,9 +34,9 @@ public class SeedTestDataService(
 
     private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory, 1);
 
-    private static readonly Filter _brandFilter = new("brand", FilterType.Text, SortType.FilterIdAsc, 1, _vehiclesCategory);
-    private static readonly Filter _modelFilter = new("model", FilterType.Text, SortType.FilterIdAsc, 2, _vehiclesCategory);
-    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, SortType.FilterIdDesc, 3, _vehiclesCategory);
+    private static readonly Filter _brandFilter = new("brand", FilterType.Text, SortType.FilterIdAsc, 1, _vehiclesCategory, null);
+    private static readonly Filter _modelFilter = new("model", FilterType.Text, SortType.FilterIdAsc, 2, _vehiclesCategory, _brandFilter);
+    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, SortType.FilterIdDesc, 3, _vehiclesCategory, null);
 
     private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
     private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);

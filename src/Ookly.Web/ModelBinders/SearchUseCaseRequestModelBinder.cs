@@ -24,7 +24,7 @@ public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepositor
         var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();
         var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
 
-        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryCategory, filterValues));
+        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filterValues, countryCategory));
         await Task.CompletedTask;
     }
 

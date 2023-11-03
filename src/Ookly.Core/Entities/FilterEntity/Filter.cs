@@ -19,11 +19,14 @@ public enum SortType
     DocCountDesc
 }
 
-public class Filter(string id, FilterType valueType, SortType sortType, int order, string categoryId) : Entity<string>(id)
+public class Filter(string id, FilterType valueType, SortType sortType, int order, string categoryId, string? parentId)
+    : Entity<string>(id)
 {
-    public Filter(string id, FilterType valueType, SortType sortType, int order, Category category) : this(id, valueType, sortType, order, category.Id)
+    public Filter(string id, FilterType valueType, SortType sortType, int order, Category category, Filter? parent)
+        : this(id, valueType, sortType, order, category.Id, parent?.Id)
     {
         Category = category;
+        Parent = parent;
     }
 
     public FilterType ValueType { get; private set; } = valueType;
@@ -32,6 +35,9 @@ public class Filter(string id, FilterType valueType, SortType sortType, int orde
 
     public string CategoryId { get; private set; } = categoryId;
     public Category Category { get; private set; } = default!;
+
+    public string? ParentId { get; private set; } = parentId;
+    public Filter? Parent { get; private set; } = default!;
 
     public List<CategoryFilter> CategoryFilters { get; private set; } = [];
     public List<AdProperty> AdProperties { get; private set; } = [];

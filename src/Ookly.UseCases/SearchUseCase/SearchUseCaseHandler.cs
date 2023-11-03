@@ -8,8 +8,8 @@ public class SearchUseCaseHandler(IAdSearchService service) : IUseCaseHandler<Se
 {
     public async Task<SearchUseCaseResponse> HandleAsync(SearchUseCaseRequest request)
     {
-        var filters = request.CountryCategory.CategoryFilters.Select(f => f.Filter).ToList();
-        var s = await service.SearchAsync(filters);
+        var categoryFilters = request.CountryCategory.CategoryFilters.Select(f => f.Filter).ToList();
+        var s = await service.SearchAsync(categoryFilters);
 
         request.CountryCategory.CategoryFilters.ToDictionary(k => k.FilterId, v => v);
 

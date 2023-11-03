@@ -25,7 +25,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
 
         sd.Size(10);
         sd = BuildQuery(sd);
-        sd = BuildAggregates(sd);
+        sd = BuildAggregates(sd, []);
 
         var response = await client.SearchAsync<Ad>(sd);
 
@@ -40,7 +40,10 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     private static SearchDescriptor<Ad> BuildQuery(SearchDescriptor<Ad> descriptor) =>
         descriptor.Query(q => q.MatchAll());
 
-    private SearchDescriptor<Ad> BuildAggregates(SearchDescriptor<Ad> descriptor) =>
+    private List<string> GetExcludeAggregations(List<FilterEntity.Filter> filters) =>
+        [.. filters.Select(f => f.Id)];
+
+    private SearchDescriptor<Ad> BuildAggregates(SearchDescriptor<Ad> descriptor, List<string> exclude) =>
         descriptor
             .Aggregations(a => a
                 .Nested(_aggregatePropertiesName, n => n
@@ -48,6 +51,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
                     .Aggregations(aa => aa
                         .Terms(_aggregateNamesName, t => t
                             .Field(p => p.Properties.Suffix("filterId"))
+                            .Exclude(exclude)
                             .Aggregations(aa => aa
                                 .Terms(_aggregateTextValues, t => t
                                     .Field(f => f.Properties.Suffix("textValue"))
