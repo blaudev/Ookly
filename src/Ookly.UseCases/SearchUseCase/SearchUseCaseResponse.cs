@@ -5,8 +5,8 @@ using Ookly.Core.Services.SearchService.Models;
 namespace Ookly.UseCases.SearchUseCase;
 
 public record SearchUseCaseResponse(
-    string CountryId,
-    string CategoryId,
+    string Country,
+    string Category,
     Dictionary<string, string> Filters,
     List<Facet>? Facets,
     long AdCount,

@@ -31,7 +31,10 @@ builder.Services.AddScoped<SearchUseCaseHandler>();
 
 builder.Services.AddScoped<SearchUseCaseRequestModelBinder>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBinderProviders.Insert(0, new SearchUseCaseRequestModelBinderProvider());
+});
 
 var app = builder.Build();
 
