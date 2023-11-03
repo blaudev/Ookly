@@ -1,13 +1,13 @@
 ﻿using Blau.UseCases;
-using Blau.Validations;
+
+using Ookly.Core.Entities.CountryEntity;
 
 namespace Ookly.UseCases.SearchUseCase;
 
-public record SearchUseCaseRequest(string CountryId, string CategoryId, Dictionary<string, string> Filters) : IUseCaseRequest, IValidable
+public class SearchUseCaseRequest(string countryId, string categoryId, Dictionary<string, string> filterValues, CountryCategory countryCategory) : IUseCaseRequest
 {
-    public void Validate()
-    {
-        Validator.NotEmpty(() => CountryId);
-        Validator.NotEmpty(() => CategoryId);
-    }
+    public string CountryId { get; private set; } = countryId;
+    public string CategoryId { get; private set; } = categoryId;
+    public CountryCategory CountryCategory { get; private set; } = countryCategory;
+    public Dictionary<string, string> FilterValues { get; private set; } = filterValues;
 }

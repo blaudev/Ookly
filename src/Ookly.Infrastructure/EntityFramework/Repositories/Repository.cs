@@ -6,7 +6,7 @@ using Ookly.Core.Interfaces;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class Repository<T>(ApplicationContext context) : IRepository<T> where T : class, IAggregateRoot
+public class Repository<T>(ApplicationContext context) : IRepository<T> where T : class, IEntity
 {
     protected readonly ApplicationContext context = context;
 

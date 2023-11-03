@@ -1,28 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Blau.Exceptions;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+using Ookly.Core.Entities.CountryEntity;
 using Ookly.UseCases.SearchUseCase;
 
 namespace Ookly.Web.ModelBinders;
 
-public class SearchUseCaseRequestModelBinder : IModelBinder
+public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepository) : IModelBinder
 {
-    private static readonly string[] filterNames = ["VehicleBrand", "VehicleModel", "VehicleYear", "VehicleMileage", "VehicleFuelType", "VehicleColor"];
-
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        var countryId = bindingContext.ValueProvider.GetValue("CountryId").FirstValue ?? string.Empty;
-        var categoryId = bindingContext.ValueProvider.GetValue("CategoryId").FirstValue ?? string.Empty;
-        var filters = GetFilters(bindingContext);
+        var countryId = bindingContext.ValueProvider.GetValue("country").FirstValue ?? string.Empty;
+        var categoryId = bindingContext.ValueProvider.GetValue("category").FirstValue ?? string.Empty;
 
-        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filters));
+        var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(countryId);
+
+        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.CategoryId == categoryId)
+            ?? throw new ValidationException(categoryId);
+
+        var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();
+        var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
+
+        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filterValues, countryCategory));
         await Task.CompletedTask;
     }
 
-    private Dictionary<string, string> GetFilters(ModelBindingContext bindingContext)
+    private static Dictionary<string, string> GetFilterValues(List<string> categoryFilterIds, ModelBindingContext bindingContext)
     {
-        return filterNames
+        return categoryFilterIds
             .ToDictionary(k => k, v => bindingContext.ValueProvider.GetValue(v).FirstValue ?? string.Empty)
             .Where(i => i.Value != string.Empty)
             .ToDictionary(k => k.Key, v => v.Value);

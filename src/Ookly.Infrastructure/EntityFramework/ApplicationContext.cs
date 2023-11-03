@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-using Ookly.Core.AdAggregate;
-using Ookly.Core.CountryAggregate;
-using Ookly.Core.VehicleBrandAggregate;
-
+using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CountryEntity;
 using System.Reflection;
 
 namespace Ookly.Infrastructure.EntityFramework;
@@ -19,8 +16,6 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public virtual DbSet<Ad> Ads => Set<Ad>();
-    public virtual DbSet<Country> Countries => Set<Country>();
-    public virtual DbSet<VehicleBrand> VehicleBrands => Set<VehicleBrand>();
-    public virtual DbSet<VehicleModel> VehicleModels => Set<VehicleModel>();
+    public DbSet<Country> Countries => Set<Country>();
+    public DbSet<Ad> Ads => Set<Ad>();
 }

@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Ookly.Core.AdAggregate;
-using Ookly.Core.AdDocumentAggregate;
-using Ookly.Core.CountryAggregate;
-using Ookly.Core.VehicleBrandAggregate;
+using Ookly.Core.Entities.AdEntity;
+using Ookly.Core.Entities.CategoryEntity;
+using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Services.AdElasticIndexService;
 using Ookly.Infrastructure.EntityFramework;
-using Ookly.Web.Configuration;
+using Ookly.Infrastructure.Options;
 
 using System.Text;
 
@@ -14,31 +15,39 @@ namespace Ookly.Web.Services;
 
 public class SeedTestDataService(
     ApplicationContext context,
-    IOptions<DataOptions> dataOptions,
+    IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
-    IVehicleBrandRepository vehicleBrandRepository,
     IAdRepository adRepository,
-    IAdDocumentRepository adDocumentRepository)
+    IElasticAdIndexService elasticAdIndexService
+)
 {
-    private readonly DataOptions options = dataOptions.Value;
+    private readonly DatabaseOptions options = dataOptions.Value;
 
     private static readonly Country _chile = new("chile");
     private static readonly Country _spain = new("spain");
 
-    private static readonly CategoryType _vehiclesCategoryType = new("vehicles");
-    private static readonly CategoryType _realEstateCategoryType = new("real-estate");
+    private static readonly Category _vehiclesCategory = new("vehicles");
+    private static readonly Category _realEstateCategory = new("real-estate");
 
-    private static readonly Category _chileVehiclesCategory = new(_chile, _vehiclesCategoryType);
+    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategory, 1);
+    private static readonly CountryCategory _chileRealEstateCategory = new(_chile, _realEstateCategory, 2);
 
-    private static readonly FilterType _vehicleBrandFilterType = new("brand", FilterTypeValueType.Text);
-    private static readonly FilterType _vehicleModelFilterType = new("model", FilterTypeValueType.Text);
-    private static readonly FilterType _vehicleYearFilterType = new("year", FilterTypeValueType.Numeric);
+    private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory, 1);
 
-    private static readonly Filter _chileVehicleBrandFilter = new(_chileVehiclesCategory, _vehicleBrandFilterType);
-    private static readonly Filter _chileYearFilter = new(_chileVehiclesCategory, _vehicleYearFilterType);
+    private static readonly Filter _brandFilter = new("brand", FilterType.Text, SortType.FilterIdAsc, 1, _vehiclesCategory, null);
+    private static readonly Filter _modelFilter = new("model", FilterType.Text, SortType.FilterIdAsc, 2, _vehiclesCategory, _brandFilter);
+    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, SortType.FilterIdDesc, 3, _vehiclesCategory, null);
 
-    private static readonly VehicleModel _mercedesBenzC200Model = new("C 200");
-    private static readonly VehicleBrand _mercedesBenz = new("Mercedes Benz");
+    private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
+    private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);
+    private static readonly CategoryFilter _chileYearFilter = new(_chileVehiclesCategory, _yearFilter);
+
+    private static readonly CategoryFilter _spainBrandFilter = new(_spainVehiclesCategory, _brandFilter);
+    private static readonly CategoryFilter _spainModelFilter = new(_spainVehiclesCategory, _modelFilter);
+    private static readonly CategoryFilter _spainYearFilter = new(_spainVehiclesCategory, _yearFilter);
+
+    private static readonly Ad mercedesA180 = new(AdStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz A 180 del 2021", 5000000);
+    private static readonly Ad mercedesC200 = new(AdStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz C 200 del 2023", 10000000);
 
     public async Task SeedAsync()
     {
@@ -56,7 +65,6 @@ public class SeedTestDataService(
         }
 
         await SeedCountriesAsync();
-        await SeedVehicleBrandsAsync();
         await SeedAdsAsync();
     }
 
@@ -75,12 +83,12 @@ public class SeedTestDataService(
 
     private async Task DeleteIndicesAsync()
     {
-        await adDocumentRepository.DeleteAdIndexAsync();
+        await elasticAdIndexService.DeleteIndexAsync();
     }
 
     private async Task CreateIndicesAsync()
     {
-        await adDocumentRepository.CreateIndexAsync();
+        await elasticAdIndexService.CreateIndexAsync();
     }
 
     private async Task SeedCountriesAsync()
@@ -90,30 +98,20 @@ public class SeedTestDataService(
             return;
         }
 
-        _chileYearFilter.AddFacets(Enumerable
-            .Range(DateTime.Now.Year - 50, 50)
-            .Reverse()
-            .Select(x => new Facet(_chileYearFilter, x.ToString(), x.ToString()))
-            .ToList());
+        _chileVehiclesCategory.AddCategoryFilter(_chileBrandFilter);
+        _chileVehiclesCategory.AddCategoryFilter(_chileModelFilter);
+        _chileVehiclesCategory.AddCategoryFilter(_chileYearFilter);
 
-        _chileVehiclesCategory.AddFilter(_chileYearFilter);
+        _chile.AddCountryCategory(_chileVehiclesCategory);
+        _chile.AddCountryCategory(_chileRealEstateCategory);
 
-        _chileVehiclesCategory.AddFilter(_chileVehicleBrandFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainBrandFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainModelFilter);
+        _spainVehiclesCategory.AddCategoryFilter(_spainYearFilter);
 
-        _chile.AddCategory(_chileVehiclesCategory);
+        _spain.AddCountryCategory(_spainVehiclesCategory);
 
         await countryRepository.AddAsync([_chile, _spain]);
-    }
-
-    private async Task SeedVehicleBrandsAsync()
-    {
-        if (await vehicleBrandRepository.AnyAsync())
-        {
-            return;
-        }
-
-        _mercedesBenz.AddModel(_mercedesBenzC200Model);
-        await vehicleBrandRepository.AddAsync(_mercedesBenz);
     }
 
     private async Task SeedAdsAsync()
@@ -123,44 +121,26 @@ public class SeedTestDataService(
             return;
         }
 
-        var ad = new Ad
-        (
-            AdStatus.Active,
-            "",
-            _chile,
-            _chileVehiclesCategory,
-            "",
-            "Mercedes Benz C 200 del 2023",
-            10000000
-        );
-
-        ad.AddProperties(
+        mercedesA180.AddProperties(
             [
-                new AdProperty(ad, _vehicleBrandFilterType, _mercedesBenz.Id),
-                new AdProperty(ad, _vehicleModelFilterType, _mercedesBenzC200Model.Id),
-                new AdProperty(ad, _vehicleYearFilterType, 2023)
+                new AdProperty(mercedesA180, _brandFilter, "Mercedes Benz"),
+                new AdProperty(mercedesA180, _modelFilter, "A 180"),
+                new AdProperty(mercedesA180, _yearFilter, 2021)
             ]
         );
 
-        await adRepository.AddAsync(ad);
+        await adRepository.AddAsync(mercedesA180);
+        await elasticAdIndexService.AddAdAsync(mercedesA180);
 
-        var adDocument = new AdDocument(
-            ad.Id,
-            ad.CountryId,
-            ad.CategoryId,
-            ad.PictureUrl,
-            ad.Title,
-            ad.Description,
-            ad.Price,
-            ad.Properties.ToDictionary(x => x.FilterType.Id, x =>
-                (object)(x switch
-                {
-                    { TextValue: string value } => value,
-                    { NumericValue: decimal value } => value,
-                    _ => throw new Exception()
-                }))
+        mercedesC200.AddProperties(
+            [
+                new AdProperty(mercedesC200, _brandFilter, "Mercedes Benz"),
+                new AdProperty(mercedesC200, _modelFilter, "C 200"),
+                new AdProperty(mercedesC200, _yearFilter, 2023)
+            ]
         );
 
-        await adDocumentRepository.AddAsync(adDocument);
+        await adRepository.AddAsync(mercedesC200);
+        await elasticAdIndexService.AddAdAsync(mercedesC200);
     }
 }

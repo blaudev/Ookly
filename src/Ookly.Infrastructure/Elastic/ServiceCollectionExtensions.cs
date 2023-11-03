@@ -1,27 +1,34 @@
-﻿using Elasticsearch.Net;
+﻿using Blau.Configuration;
+
+using Elasticsearch.Net;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 using Nest;
+using Ookly.Core.Entities.AdEntity;
 
-using Ookly.Core.AdDocumentAggregate;
-using Ookly.Infrastructure.Elastic;
-
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Ookly.Infrastructure.Elastic;
 
 public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddElastic(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<ElasticOptions>(configuration.GetSection("Elastic"));
-
-        var options = configuration.GetSection("Elastic").Get<ElasticOptions>() ?? throw new ArgumentException(nameof(ElasticOptions));
-        var pool = new SingleNodeConnectionPool(options.Uri);
+        var options = services.ConfigureRequiredOptions<ElasticOptions>(configuration);
+        var pool = new SingleNodeConnectionPool(new Uri(options.ConnectionString));
 
         var settings = new ConnectionSettings(pool)
-            .DefaultMappingFor<AdDocument>(x => x
-                .IndexName(options.IndexName)
-                .IdProperty("Id"));
+            .DisableDirectStreaming()
+            .DefaultMappingFor<Ad>(x => x
+                .IndexName(options.Index)
+                .IdProperty("Id")
+                .Ignore(i => i.Country)
+                .Ignore(i => i.Category)
+            )
+            .DefaultMappingFor<AdProperty>(x => x
+                .Ignore(i => i.Ad)
+                .Ignore(i => i.FilterType)
+            );
 
         var client = new ElasticClient(settings);
         services.AddSingleton(client);

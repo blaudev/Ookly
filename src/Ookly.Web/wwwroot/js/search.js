@@ -8,8 +8,8 @@
 function searchUrl(filter) {
     const url = new URL('api/search', window.location.origin);
 
-    url.searchParams.set('countryId', countryId);
-    url.searchParams.set('categoryId', categoryId);
+    url.searchParams.set('country', country);
+    url.searchParams.set('category', category);
 
     Object.keys(filter).forEach((key) => {
         url.searchParams.set(key, filter[key]);
@@ -41,7 +41,6 @@ function updateOptions(selectElement, items, selectedValue) {
     }
 
     items.forEach((item) => {
-        console.log('item', item)
         const option = new Option(item.text, item.value, false, item.value === selectedValue);
         selectElement.add(option);
     });
@@ -73,7 +72,7 @@ async function onChangeFilter() {
     const data = await search(filter);
 
     data.facets.forEach((facet) => {
-        const element = filterElements.find(el => el.name == facet.filterName);
+        const element = filterElements.find(el => el.name == facet.filterId);
         updateSelect(element, facet.items);
     });
 

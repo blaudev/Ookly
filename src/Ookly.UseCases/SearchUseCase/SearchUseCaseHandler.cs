@@ -1,21 +1,19 @@
-﻿using Blau.Exceptions;
-using Blau.UseCases;
+﻿using Blau.UseCases;
+
+using Ookly.Core.Services.AdSearchService;
 
 namespace Ookly.UseCases.SearchUseCase;
 
-public class SearchUseCaseHandler(IFacetService facetService) : IUseCaseHandler<SearchUseCaseRequest, SearchUseCaseResponse>
+public class SearchUseCaseHandler(IAdSearchService service) : IUseCaseHandler<SearchUseCaseRequest, SearchUseCaseResponse>
 {
     public async Task<SearchUseCaseResponse> HandleAsync(SearchUseCaseRequest request)
     {
-        request.Validate();
+        var categoryFilters = request.CountryCategory.CategoryFilters.Select(f => f.Filter).ToList();
+        var s = await service.SearchAsync(categoryFilters);
 
-        var facets = request.CategoryId switch
-        {
-            "Vehicles" => await facetService.VehicleFacetsAsync(request),
-            _ => throw new ValidationException(nameof(request.CategoryId))
-        };
+        request.CountryCategory.CategoryFilters.ToDictionary(k => k.FilterId, v => v);
 
-        var response = new SearchUseCaseResponse(request.CountryId, request.CategoryId, request.Filters, facets, 10, []);
-        return await Task.FromResult(response);
+        var response = new SearchUseCaseResponse(request.CountryCategory.Country.Id, request.CountryCategory.CategoryId, request.FilterValues, s.Facets, 10, []);
+        return response;
     }
 }
