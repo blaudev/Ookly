@@ -1,6 +1,4 @@
-﻿using Ookly.Core.Entities.FilterEntity;
-
-namespace Ookly.Core.Entities.ListingEntity;
+﻿namespace Ookly.Core.Entities.ListingEntity;
 
 public class ListingDetail(
     Guid adId,
@@ -9,23 +7,23 @@ public class ListingDetail(
     decimal? numericValue = null,
     bool? booleanValue = null) : Entity<Guid>(Guid.NewGuid())
 {
-    public ListingDetail(Listing ad, Filter filterType, object value) : this(ad.Id, filterType.Id)
+    public ListingDetail(Listing ad, FilterValueType filterType, object value) : this(ad.Id, filterType.Id)
     {
         Ad = ad;
         FilterType = filterType;
 
         switch (filterType, value)
         {
-            case ({ ValueType: FilterEntity.FilterType.Text }, string textValue):
+            case ({ ValueType: FilterValueType.Text }, string textValue):
                 TextValue = textValue;
                 break;
-            case ({ ValueType: FilterEntity.FilterType.Numeric }, int numericValue):
+            case ({ ValueType: FilterValueType.Numeric }, int numericValue):
                 NumericValue = numericValue;
                 break;
-            case ({ ValueType: FilterEntity.FilterType.Numeric }, long numericValue):
+            case ({ ValueType: FilterValueType.Numeric }, long numericValue):
                 NumericValue = numericValue;
                 break;
-            case ({ ValueType: FilterEntity.FilterType.Boolean }, bool booleanValue):
+            case ({ ValueType: FilterValueType.Boolean }, bool booleanValue):
                 BooleanValue = booleanValue;
                 break;
             default:
@@ -37,7 +35,7 @@ public class ListingDetail(
     public Listing Ad { get; private set; } = default!;
 
     public string FilterId { get; private set; } = filterId;
-    public Filter FilterType { get; private set; } = default!;
+    public FilterValueType FilterType { get; private set; } = default!;
 
     public string? TextValue { get; private set; } = textValue;
     public decimal? NumericValue { get; private set; } = numericValue;

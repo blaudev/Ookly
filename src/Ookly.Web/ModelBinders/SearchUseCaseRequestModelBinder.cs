@@ -1,8 +1,7 @@
 ﻿using Blau.Exceptions;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-using Ookly.Core.Entities.CountryEntity;
+using Ookly.Core.Interfaces;
 using Ookly.UseCases.SearchUseCase;
 
 namespace Ookly.Web.ModelBinders;
@@ -18,7 +17,7 @@ public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepositor
 
         var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(countryId);
 
-        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.CategoryId == categoryId)
+        var countryCategory = country.Categories.FirstOrDefault(x => x.CategoryId == categoryId)
             ?? throw new ValidationException(categoryId);
 
         var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();

@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-using Ookly.Core.Entities.CategoryEntity;
-using Ookly.Core.Entities.CountryEntity;
-using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Entities;
 using Ookly.Core.Entities.ListingEntity;
+using Ookly.Core.Interfaces;
 using Ookly.Core.Services.AdElasticIndexService;
 using Ookly.Infrastructure.EntityFramework;
 using Ookly.Infrastructure.Options;
@@ -17,37 +16,41 @@ public class SeedTestDataService(
     ApplicationContext context,
     IOptions<DatabaseOptions> dataOptions,
     ICountryRepository countryRepository,
+    ICategoryRepository categoryRepository,
+    ICountryCategoryRepository countryCategoryRepository,
+    IFilterRepository filterRepository,
+    ICategoryFilterRepository categoryFilterRepository,
     IListingRepository adRepository,
     IElasticAdIndexService elasticAdIndexService
 )
 {
     private readonly DatabaseOptions options = dataOptions.Value;
 
-    private static readonly Country _chile = new("chile");
-    private static readonly Country _spain = new("spain");
+    private static Country _chile = new();
+    private static Country _spain = new();
 
-    private static readonly Category _vehiclesCategory = new("vehicles");
-    private static readonly Category _realEstateCategory = new("real-estate");
+    private static Category _vehiclesCategory = new();
+    private static Category _realEstateCategory = new();
 
-    private static readonly CountryCategory _chileVehiclesCategory = new(_chile, _vehiclesCategory, 1);
-    private static readonly CountryCategory _chileRealEstateCategory = new(_chile, _realEstateCategory, 2);
+    private static CountryCategory _chileVehiclesCountryCategory = new();
+    private static CountryCategory _chileRealEstateCountryCategory = new();
 
-    private static readonly CountryCategory _spainVehiclesCategory = new(_spain, _vehiclesCategory, 1);
+    private static CountryCategory _spainVehiclesCountryCategory = new();
 
-    private static readonly Filter _brandFilter = new("brand", FilterType.Text, SortType.FilterIdAsc, 1, _vehiclesCategory, null);
-    private static readonly Filter _modelFilter = new("model", FilterType.Text, SortType.FilterIdAsc, 2, _vehiclesCategory, _brandFilter);
-    private static readonly Filter _yearFilter = new("year", FilterType.Numeric, SortType.FilterIdDesc, 3, _vehiclesCategory, null);
+    private static Filter _brandFilter = new();
+    private static Filter _modelFilter = new();
+    private static Filter _yearFilter = new();
 
-    private static readonly CategoryFilter _chileBrandFilter = new(_chileVehiclesCategory, _brandFilter);
-    private static readonly CategoryFilter _chileModelFilter = new(_chileVehiclesCategory, _modelFilter);
-    private static readonly CategoryFilter _chileYearFilter = new(_chileVehiclesCategory, _yearFilter);
+    private static CategoryFilter _chileBrandCategoryFilter = new();
+    private static CategoryFilter _chileModelCategoryFilter = new();
+    private static CategoryFilter _chileYearCategoryFilter = new();
 
-    private static readonly CategoryFilter _spainBrandFilter = new(_spainVehiclesCategory, _brandFilter);
-    private static readonly CategoryFilter _spainModelFilter = new(_spainVehiclesCategory, _modelFilter);
-    private static readonly CategoryFilter _spainYearFilter = new(_spainVehiclesCategory, _yearFilter);
+    private static CategoryFilter _spainBrandCategoryFilter = new();
+    private static CategoryFilter _spainModelCategoryFilter = new();
+    private static CategoryFilter _spainYearCategoryFilter = new();
 
-    private static readonly Listing mercedesA180 = new(ListingStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz A 180 del 2021", 5000000);
-    private static readonly Listing mercedesC200 = new(ListingStatus.Active, "", _chile, _chileVehiclesCategory, "", "Mercedes Benz C 200 del 2023", 10000000);
+    private static Listing mercedesA180 = new(ListingStatus.Active, "", _chile, _chileVehiclesCountryCategory, "", "Mercedes Benz A 180 del 2021", 5000000);
+    private static Listing mercedesC200 = new(ListingStatus.Active, "", _chile, _chileVehiclesCountryCategory, "", "Mercedes Benz C 200 del 2023", 10000000);
 
     public async Task SeedAsync()
     {
@@ -65,6 +68,9 @@ public class SeedTestDataService(
         }
 
         await SeedCountriesAsync();
+        await SeedCategoriesAsync();
+        await SeedCountryCategoriesAsync();
+        await SeedFiltersAsync();
         await SeedAdsAsync();
     }
 
@@ -98,20 +104,89 @@ public class SeedTestDataService(
             return;
         }
 
-        _chileVehiclesCategory.AddCategoryFilter(_chileBrandFilter);
-        _chileVehiclesCategory.AddCategoryFilter(_chileModelFilter);
-        _chileVehiclesCategory.AddCategoryFilter(_chileYearFilter);
-
-        _chile.AddCountryCategory(_chileVehiclesCategory);
-        _chile.AddCountryCategory(_chileRealEstateCategory);
-
-        _spainVehiclesCategory.AddCategoryFilter(_spainBrandFilter);
-        _spainVehiclesCategory.AddCategoryFilter(_spainModelFilter);
-        _spainVehiclesCategory.AddCategoryFilter(_spainYearFilter);
-
-        _spain.AddCountryCategory(_spainVehiclesCategory);
+        _chile = new() { Name = "Chile" };
+        _spain = new() { Name = "España" };
 
         await countryRepository.AddAsync([_chile, _spain]);
+    }
+
+    private async Task SeedCategoriesAsync()
+    {
+        if (await categoryRepository.AnyAsync())
+        {
+            return;
+        }
+
+        _vehiclesCategory = new() { Name = "Vehicles" };
+        _realEstateCategory = new() { Name = "Real Estate" };
+
+        await categoryRepository.AddAsync([_vehiclesCategory, _realEstateCategory]);
+    }
+
+    private async Task SeedCountryCategoriesAsync()
+    {
+        if (await countryCategoryRepository.AnyAsync())
+        {
+            return;
+        }
+
+
+        _chileVehiclesCountryCategory = new() { CountryId = _chile.Id, CategoryId = _vehiclesCategory.Id, Order = 1 };
+        _chileRealEstateCountryCategory = new() { CountryId = _chile.Id, CategoryId = _realEstateCategory.Id, Order = 2 };
+        _spainVehiclesCountryCategory = new() { CountryId = _spain.Id, CategoryId = _vehiclesCategory.Id, Order = 1 };
+
+        await countryCategoryRepository.AddAsync(
+            [
+                _chileVehiclesCountryCategory,
+                _chileRealEstateCountryCategory,
+                _spainVehiclesCountryCategory
+            ]
+        );
+    }
+
+    private async Task SeedFiltersAsync()
+    {
+        if (await filterRepository.AnyAsync())
+        {
+            return;
+        }
+
+        _brandFilter = new() { Name = "brand", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 1 };
+        _yearFilter = new() { Name = "year", CategoryId = _vehiclesCategory.Id, Type = FilterType.Numeric, Sort = FilterSort.FilterNameDesc, Order = 3 };
+
+        await filterRepository.AddAsync([_brandFilter, _yearFilter]);
+
+        _modelFilter = new() { Name = "model", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 2, ParentId = _brandFilter.Id };
+
+        await filterRepository.AddAsync(_modelFilter);
+    }
+
+    private async Task SeedCategoryFiltersAsync()
+    {
+        if (await categoryFilterRepository.AnyAsync())
+        {
+            return;
+        }
+
+        _chileBrandCategoryFilter = new() { CountryCategoryId = _chileVehiclesCountryCategory.Id, FilterId = _brandFilter.Id };
+        _chileModelCategoryFilter = new() { CountryCategoryId = _chileVehiclesCountryCategory.Id, FilterId = _modelFilter.Id };
+        _chileYearCategoryFilter = new() { CountryCategoryId = _chileVehiclesCountryCategory.Id, FilterId = _yearFilter.Id };
+
+        _spainBrandCategoryFilter = new() { CountryCategoryId = _spainVehiclesCountryCategory.Id, FilterId = _brandFilter.Id };
+        _spainModelCategoryFilter = new() { CountryCategoryId = _spainVehiclesCountryCategory.Id, FilterId = _modelFilter.Id };
+        _spainYearCategoryFilter = new() { CountryCategoryId = _spainVehiclesCountryCategory.Id, FilterId = _yearFilter.Id };
+
+
+        await categoryFilterRepository.AddAsync(
+            [
+                _chileBrandCategoryFilter,
+                _chileModelCategoryFilter,
+                _chileYearCategoryFilter,
+                _spainBrandCategoryFilter,
+                _spainModelCategoryFilter,
+                _spainYearCategoryFilter
+            ]
+        );
     }
 
     private async Task SeedAdsAsync()

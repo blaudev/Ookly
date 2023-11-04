@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231103155532_RenameAd")]
+    partial class RenameAd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,41 +28,12 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
             modelBuilder.Entity("Ookly.Core.Entities.CategoryEntity.Category", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CategoryTypeId")
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("CountryId")
-                        .IsRequired()
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryTypeId");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("Ookly.Core.Entities.CategoryEntity.CategoryType", b =>
-                {
-                    b.Property<string>("Id")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryType");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.CategoryFilter", b =>
@@ -91,13 +65,35 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.CountryCategory", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CountryId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("CountryCategory");
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.FilterEntity.Filter", b =>
@@ -217,26 +213,9 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.ToTable("ListingDetail");
                 });
 
-            modelBuilder.Entity("Ookly.Core.Entities.CategoryEntity.Category", b =>
-                {
-                    b.HasOne("Ookly.Core.Entities.CategoryEntity.CategoryType", "CategoryType")
-                        .WithMany("CountryCategories")
-                        .HasForeignKey("CategoryTypeId");
-
-                    b.HasOne("Ookly.Core.Entities.CountryEntity.Country", "Country")
-                        .WithMany("Categories")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CategoryType");
-
-                    b.Navigation("Country");
-                });
-
             modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.CategoryFilter", b =>
                 {
-                    b.HasOne("Ookly.Core.Entities.CategoryEntity.Category", "CountryCategory")
+                    b.HasOne("Ookly.Core.Entities.CountryEntity.CountryCategory", "CountryCategory")
                         .WithMany("CategoryFilters")
                         .HasForeignKey("CountryCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -253,9 +232,28 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
                     b.Navigation("Filter");
                 });
 
+            modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.CountryCategory", b =>
+                {
+                    b.HasOne("Ookly.Core.Entities.CategoryEntity.Category", "Category")
+                        .WithMany("CountryCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ookly.Core.Entities.CountryEntity.Country", "Country")
+                        .WithMany("CountryCategories")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("Ookly.Core.Entities.FilterEntity.Filter", b =>
                 {
-                    b.HasOne("Ookly.Core.Entities.CategoryEntity.CategoryType", "Category")
+                    b.HasOne("Ookly.Core.Entities.CategoryEntity.Category", "Category")
                         .WithMany("Filters")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -272,7 +270,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.Entities.ListingEntity.Listing", b =>
                 {
-                    b.HasOne("Ookly.Core.Entities.CategoryEntity.Category", "Category")
+                    b.HasOne("Ookly.Core.Entities.CountryEntity.CountryCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -310,11 +308,6 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.Entities.CategoryEntity.Category", b =>
                 {
-                    b.Navigation("CategoryFilters");
-                });
-
-            modelBuilder.Entity("Ookly.Core.Entities.CategoryEntity.CategoryType", b =>
-                {
                     b.Navigation("CountryCategories");
 
                     b.Navigation("Filters");
@@ -322,7 +315,12 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
             modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.Country", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("CountryCategories");
+                });
+
+            modelBuilder.Entity("Ookly.Core.Entities.CountryEntity.CountryCategory", b =>
+                {
+                    b.Navigation("CategoryFilters");
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.FilterEntity.Filter", b =>

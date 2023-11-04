@@ -1,6 +1,5 @@
 ﻿using Nest;
-
-using Ookly.Core.Entities.FilterEntity;
+using Ookly.Core.Entities;
 using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdSearchService;
 using Ookly.Core.Services.SearchService.Models;
@@ -17,7 +16,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     private readonly string _aggregateTextValues = "text_values";
     private readonly string _aggregateNumericValues = "numeric_values";
 
-    public async Task<SearchResponse> SearchAsync(List<FilterEntity.Filter> filters)
+    public async Task<SearchResponse> SearchAsync(List<FilterValueType> filters)
     {
         var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
 
@@ -40,7 +39,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     private static SearchDescriptor<Listing> BuildQuery(SearchDescriptor<Listing> descriptor) =>
         descriptor.Query(q => q.MatchAll());
 
-    private List<string> GetExcludeAggregations(List<FilterEntity.Filter> filters) =>
+    private List<string> GetExcludeAggregations(List<FilterValueType> filters) =>
         [.. filters.Select(f => f.Id)];
 
     private SearchDescriptor<Listing> BuildAggregates(SearchDescriptor<Listing> descriptor, List<string> exclude) =>
@@ -73,10 +72,10 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
             .Buckets
         ];
 
-    private static IEnumerable<KeyedBucket<string>> ExcludeFilterBuckets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters) =>
+    private static IEnumerable<KeyedBucket<string>> ExcludeFilterBuckets(IEnumerable<KeyedBucket<string>> buckets, List<FilterValueType> filters) =>
         buckets.Where(q => filters.Any(f => f.Id == q.Key));
 
-    private List<Facet> GetFacets(IEnumerable<KeyedBucket<string>> buckets, List<FilterEntity.Filter> filters) =>
+    private List<Facet> GetFacets(IEnumerable<KeyedBucket<string>> buckets, List<FilterValueType> filters) =>
         [.. buckets
             .Select(b =>
                 new Facet
@@ -93,16 +92,16 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     private static IEnumerable<FacetItem> GetFacetItems(KeyedBucket<string> bucket, string key) =>
         bucket.Terms(key).Buckets.Select(i => new FacetItem(i.Key, i.DocCount ?? 0));
 
-    private static List<Facet> OrderFacets(List<Facet> facets, Dictionary<string, SortType> filterSorts) =>
+    private static List<Facet> OrderFacets(List<Facet> facets, Dictionary<string, FilterSortType> filterSorts) =>
         [.. facets.Select(f => f with { Items = OrderItems(f.Items, filterSorts[f.FilterId]) })];
 
-    private static List<FacetItem> OrderItems(IEnumerable<FacetItem> items, SortType sortType) =>
+    private static List<FacetItem> OrderItems(IEnumerable<FacetItem> items, FilterSortType sortType) =>
         sortType switch
         {
-            SortType.FilterIdAsc => [.. items.OrderBy(o => o.Key)],
-            SortType.FilterIdDesc => [.. items.OrderByDescending(o => o.Key)],
-            SortType.DocCountAsc => [.. items.OrderBy(o => o.Count)],
-            SortType.DocCountDesc => [.. items.OrderByDescending(o => o.Count)],
+            FilterSortType.FilterIdAsc => [.. items.OrderBy(o => o.Key)],
+            FilterSortType.FilterIdDesc => [.. items.OrderByDescending(o => o.Key)],
+            FilterSortType.DocCountAsc => [.. items.OrderBy(o => o.Count)],
+            FilterSortType.DocCountDesc => [.. items.OrderByDescending(o => o.Count)],
             _ => throw new NotImplementedException(),
         };
 

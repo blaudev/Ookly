@@ -5,12 +5,9 @@ using Ookly.Core.Entities;
 
 namespace Ookly.Infrastructure.EntityFramework.ModelConfigurations;
 
-public class CountryConfiguration : IEntityTypeConfiguration<Country>
+public class CountryCategoryConfiguration : IEntityTypeConfiguration<CountryCategory>
 {
-    public void Configure(EntityTypeBuilder<Country> builder)
+    public void Configure(EntityTypeBuilder<CountryCategory> builder)
     {
-        builder.Property(p => p.Name)
-            .HasMaxLength(20);
     }
 }
-

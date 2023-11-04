@@ -1,6 +1,4 @@
-﻿using Ookly.Core.Entities.CountryEntity;
-
-namespace Ookly.Core.Entities.ListingEntity;
+﻿namespace Ookly.Core.Entities.ListingEntity;
 
 public enum ListingStatus
 {
