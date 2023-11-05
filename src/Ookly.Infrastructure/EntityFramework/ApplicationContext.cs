@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Blau.Data;
+
+using Microsoft.EntityFrameworkCore;
 
 using Ookly.Core.Entities;
 using Ookly.Core.Entities.ListingEntity;
@@ -7,7 +9,7 @@ using System.Reflection;
 
 namespace Ookly.Infrastructure.EntityFramework;
 
-public class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options)
+public class ApplicationContext(DbContextOptions<DataContext> options) : DataContext(options)
 {
     // EntityFramework required constructor
     public ApplicationContext() : this(default!) { }

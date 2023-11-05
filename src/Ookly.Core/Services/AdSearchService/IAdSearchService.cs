@@ -5,5 +5,5 @@ namespace Ookly.Core.Services.AdSearchService;
 
 public interface IAdSearchService
 {
-    Task<SearchResponse> SearchAsync(List<FilterValueType> filters);
+    Task<SearchResponse> SearchAsync(List<Filter> filters);
 }

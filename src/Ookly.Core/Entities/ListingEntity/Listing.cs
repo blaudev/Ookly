@@ -9,16 +9,15 @@ public enum ListingStatus
 };
 
 public class Listing(
-    Guid id,
     ListingStatus status,
     string sourceUrl,
-    string countryId,
-    string categoryId,
+    int countryId,
+    int categoryId,
     string pictureUrl,
     string title,
     string? description,
     long price
-    ) : Entity<Guid>(id), IAggregateRoot
+    ) : Entity, IAggregateRoot
 {
 
     public Listing(
@@ -30,7 +29,6 @@ public class Listing(
         string title,
         long price
     ) : this(
-        Guid.NewGuid(),
         status,
         sourceUrl,
         country.Id,
@@ -52,10 +50,10 @@ public class Listing(
 
     public string SourceUrl { get; private set; } = sourceUrl;
 
-    public string CountryId { get; private set; } = countryId;
+    public int CountryId { get; private set; } = countryId;
     public Country Country { get; private set; } = default!;
 
-    public string CategoryId { get; private set; } = categoryId;
+    public int CategoryId { get; private set; } = categoryId;
     public CountryCategory Category { get; private set; } = default!;
 
     public string PictureUrl { get; private set; } = pictureUrl;

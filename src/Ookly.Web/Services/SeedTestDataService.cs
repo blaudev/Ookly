@@ -71,7 +71,7 @@ public class SeedTestDataService(
         await SeedCategoriesAsync();
         await SeedCountryCategoriesAsync();
         await SeedFiltersAsync();
-        await SeedAdsAsync();
+        //await SeedAdsAsync();
     }
 
     private async Task TruncateAsync()
@@ -189,33 +189,33 @@ public class SeedTestDataService(
         );
     }
 
-    private async Task SeedAdsAsync()
-    {
-        if (await adRepository.AnyAsync())
-        {
-            return;
-        }
+    //private async Task SeedAdsAsync()
+    //{
+    //    if (await adRepository.AnyAsync())
+    //    {
+    //        return;
+    //    }
 
-        mercedesA180.AddProperties(
-            [
-                new ListingDetail(mercedesA180, _brandFilter, "Mercedes Benz"),
-                new ListingDetail(mercedesA180, _modelFilter, "A 180"),
-                new ListingDetail(mercedesA180, _yearFilter, 2021)
-            ]
-        );
+    //    mercedesA180.AddProperties(
+    //        [
+    //            new ListingDetail(mercedesA180, _brandFilter, "Mercedes Benz"),
+    //            new ListingDetail(mercedesA180, _modelFilter, "A 180"),
+    //            new ListingDetail(mercedesA180, _yearFilter, 2021)
+    //        ]
+    //    );
 
-        await adRepository.AddAsync(mercedesA180);
-        await elasticAdIndexService.AddAdAsync(mercedesA180);
+    //    await adRepository.AddAsync(mercedesA180);
+    //    await elasticAdIndexService.AddAdAsync(mercedesA180);
 
-        mercedesC200.AddProperties(
-            [
-                new ListingDetail(mercedesC200, _brandFilter, "Mercedes Benz"),
-                new ListingDetail(mercedesC200, _modelFilter, "C 200"),
-                new ListingDetail(mercedesC200, _yearFilter, 2023)
-            ]
-        );
+    //    mercedesC200.AddProperties(
+    //        [
+    //            new ListingDetail(mercedesC200, _brandFilter, "Mercedes Benz"),
+    //            new ListingDetail(mercedesC200, _modelFilter, "C 200"),
+    //            new ListingDetail(mercedesC200, _yearFilter, 2023)
+    //        ]
+    //    );
 
-        await adRepository.AddAsync(mercedesC200);
-        await elasticAdIndexService.AddAdAsync(mercedesC200);
-    }
+    //    await adRepository.AddAsync(mercedesC200);
+    //    await elasticAdIndexService.AddAdAsync(mercedesC200);
+    //}
 }

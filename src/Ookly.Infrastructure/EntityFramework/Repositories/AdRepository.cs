@@ -2,7 +2,7 @@
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class AdRepository(ApplicationContext context) : Repository<Listing>(context), IListingRepository
+public class AdRepository(ApplicationContext context) : ApplicationRepository<Listing>(context), IListingRepository
 {
     public Task<List<Listing>> SearchAsync(Dictionary<string, string> filters)
     {

@@ -1,10 +1,9 @@
 ﻿using Nest;
+
 using Ookly.Core.Entities;
 using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Services.AdSearchService;
 using Ookly.Core.Services.SearchService.Models;
-
-using FilterEntity = Ookly.Core.Entities.FilterEntity;
 
 namespace Ookly.Infrastructure.Elastic.Services;
 
@@ -16,7 +15,7 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
     private readonly string _aggregateTextValues = "text_values";
     private readonly string _aggregateNumericValues = "numeric_values";
 
-    public async Task<SearchResponse> SearchAsync(List<FilterValueType> filters)
+    public async Task<SearchResponse> SearchAsync(List<Filter> filters)
     {
         var filterSorts = filters.ToDictionary(k => k.Id, v => v.SortType);
 

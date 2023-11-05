@@ -3,6 +3,6 @@ using Ookly.Core.Interfaces;
 
 namespace Ookly.Infrastructure.EntityFramework.Repositories;
 
-public class CountryCategoryRepository(ApplicationContext context) : Repository<CountryCategory>(context), ICountryCategoryRepository
+public class CountryCategoryRepository(ApplicationContext context) : ApplicationRepository<CountryCategory>(context), ICountryCategoryRepository
 {
 }
