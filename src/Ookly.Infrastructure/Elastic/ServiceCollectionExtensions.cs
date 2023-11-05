@@ -28,7 +28,7 @@ public static partial class ServiceCollectionExtensions
             )
             .DefaultMappingFor<ListingDetail>(x => x
                 .Ignore(i => i.Ad)
-                .Ignore(i => i.FilterType)
+                .Ignore(i => i.Filter)
             );
 
         var client = new ElasticClient(settings);

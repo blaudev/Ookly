@@ -14,20 +14,19 @@ public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepositor
         ArgumentNullException.ThrowIfNull(bindingContext);
 
         var countryName = bindingContext.ValueProvider.GetValue("country").FirstValue ?? throw new ValidationException("country");
-        var country =
 
 
         var categoryName = bindingContext.ValueProvider.GetValue("category").FirstValue ?? throw new ValidationException("country");
 
-        var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(countryId);
+        var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(0);
 
-        var countryCategory = country.Categories.FirstOrDefault(x => x.CategoryId == categoryId)
-            ?? throw new ValidationException(categoryId);
+        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.Id == 0)
+            ?? throw new ValidationException(categoryName);
 
-        var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.FilterId).ToList();
+        var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.Filter.Name).ToList();
         var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
 
-        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest(countryId, categoryId, filterValues, countryCategory));
+        bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest { CountryId = countryName, CategoryId = categoryName, FilterValues = filterValues });
         await Task.CompletedTask;
     }
 

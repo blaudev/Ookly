@@ -26,16 +26,16 @@
             @foreach (var country in Model.Countries)
             {
                 <div class="country">
-                    <h2>@country.Id</h2>
+                    <h2>@country.Name</h2>
                     <div class="verticals">
                         @foreach (var category in country.Categories)
                         {
                             <div class="vertical">
-                                <h3>@category.Id</h3>
+                                <h3>@category.Name</h3>
                                 <a class="btn"
                                    asp-controller="Search"
-                                   asp-route-country="@country.Id"
-                                   asp-route-category="@category.Id">Buscar</a>
+                                   asp-route-country="@country.Name"
+                                   asp-route-category="@category.Name">Buscar</a>
                             </div>
                         }
                     </div>

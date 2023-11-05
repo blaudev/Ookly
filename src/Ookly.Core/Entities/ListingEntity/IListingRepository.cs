@@ -1,4 +1,4 @@
-﻿using Ookly.Core.Interfaces;
+﻿using Blau.Data;
 
 namespace Ookly.Core.Entities.ListingEntity;
 

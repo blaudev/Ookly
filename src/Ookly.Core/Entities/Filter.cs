@@ -1,9 +1,7 @@
 ﻿namespace Ookly.Core.Entities;
 
-public class Filter : Entity
+public class Filter : NamedEntity
 {
-    public string Name { get; init; } = string.Empty;
-
     public int CategoryId { get; init; }
     public Category Category { get; init; } = new();
 

@@ -13,7 +13,7 @@ public class SearchUseCaseHandler(IAdSearchService service) : IUseCaseHandler<Se
 
         request.CountryCategory.CategoryFilters.ToDictionary(k => k.FilterId, v => v);
 
-        var response = new SearchUseCaseResponse(request.CountryCategory.Country.Id, request.CountryCategory.CategoryId, request.FilterValues, s.Facets, 10, []);
+        var response = new SearchUseCaseResponse(request.CountryCategory.Country.Name, request.CountryCategory.Category.Name, request.FilterValues, s.Facets, 10, []);
         return response;
     }
 }

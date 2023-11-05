@@ -20,7 +20,6 @@ public class SeedTestDataService(
     ICountryCategoryRepository countryCategoryRepository,
     IFilterRepository filterRepository,
     ICategoryFilterRepository categoryFilterRepository,
-    IListingRepository adRepository,
     IElasticAdIndexService elasticAdIndexService
 )
 {
