@@ -3,6 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Ookly.Core.Entities;
+using Ookly.Core.Entities.ListingEntity;
 
 using System.Reflection;
 
@@ -22,5 +23,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     public DbSet<Country> Countries => Set<Country>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<CountryCategory> CountryCategories => Set<CountryCategory>();
-    //public DbSet<Listing> Listings => Set<Listing>();
+    public DbSet<Filter> Filters => Set<Filter>();
+    public DbSet<Listing> Listings => Set<Listing>();
+    public DbSet<ListingDetail> ListingDetails => Set<ListingDetail>();
 }

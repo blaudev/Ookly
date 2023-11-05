@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ookly.Infrastructure.EntityFramework;
@@ -11,9 +12,11 @@ using Ookly.Infrastructure.EntityFramework;
 namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231105191415_Filters")]
+    partial class Filters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,7 +191,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Listings");
+                    b.ToTable("Listing");
                 });
 
             modelBuilder.Entity("Ookly.Core.Entities.ListingEntity.ListingDetail", b =>
@@ -220,7 +223,7 @@ namespace Ookly.Infrastructure.EntityFramework.Postgres.Migrations
 
                     b.HasIndex("FilterId");
 
-                    b.ToTable("ListingDetails");
+                    b.ToTable("ListingDetail");
                 });
 
             modelBuilder.Entity("CountryCategoryFilter", b =>

@@ -1,25 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 using Ookly.Core.Entities;
 using Ookly.Core.Entities.ListingEntity;
 using Ookly.Core.Interfaces;
-using Ookly.Core.Services.AdElasticIndexService;
-using Ookly.Infrastructure.EntityFramework;
 using Ookly.Infrastructure.Options;
-
-using System.Text;
 
 namespace Ookly.Web.Services;
 
 public class SeedTestDataService(
-    ApplicationContext context,
+    //ApplicationContext context,
     IOptions<DatabaseOptions> dataOptions,
-    ICountryRepository countryRepository,
-    ICategoryRepository categoryRepository,
-    ICountryCategoryRepository countryCategoryRepository,
-    IFilterRepository filterRepository,
-    IElasticAdIndexService elasticAdIndexService
+    ICountryRepository countryRepository
+//ICategoryRepository categoryRepository,
+//ICountryCategoryRepository countryCategoryRepository,
+//IFilterRepository filterRepository,
+//IElasticAdIndexService elasticAdIndexService
 )
 {
     private readonly DatabaseOptions options = dataOptions.Value;
@@ -51,41 +46,41 @@ public class SeedTestDataService(
 
         if (options.Truncate)
         {
-            await TruncateAsync();
+            //await TruncateAsync();
 
-            await DeleteIndicesAsync();
-            await CreateIndicesAsync();
+            //await DeleteIndicesAsync();
+            //await CreateIndicesAsync();
         }
 
         await SeedCountriesAsync();
-        await SeedCategoriesAsync();
-        await SeedCountryCategoriesAsync();
-        await SeedFiltersAsync();
+        //await SeedCategoriesAsync();
+        //await SeedCountryCategoriesAsync();
+        //await SeedFiltersAsync();
         //await SeedAdsAsync();
     }
 
-    private async Task TruncateAsync()
-    {
-        var statements = context.Model
-            .GetEntityTypes()
-            .Select(entity => $"TRUNCATE TABLE public.\"{entity.GetTableName()}\" CONTINUE IDENTITY CASCADE;")
-            .ToList();
+    //private async Task TruncateAsync()
+    //{
+    //    var statements = context.Model
+    //        .GetEntityTypes()
+    //        .Select(entity => $"TRUNCATE TABLE public.\"{entity.GetTableName()}\" CONTINUE IDENTITY CASCADE;")
+    //        .ToList();
 
-        var sql = string.Join("\n", statements);
-        var sb = new StringBuilder(sql);
+    //    var sql = string.Join("\n", statements);
+    //    var sb = new StringBuilder(sql);
 
-        await context.Database.ExecuteSqlRawAsync(sql);
-    }
+    //    await context.Database.ExecuteSqlRawAsync(sql);
+    //}
 
-    private async Task DeleteIndicesAsync()
-    {
-        await elasticAdIndexService.DeleteIndexAsync();
-    }
+    //private async Task DeleteIndicesAsync()
+    //{
+    //    await elasticAdIndexService.DeleteIndexAsync();
+    //}
 
-    private async Task CreateIndicesAsync()
-    {
-        await elasticAdIndexService.CreateIndexAsync();
-    }
+    //private async Task CreateIndicesAsync()
+    //{
+    //    await elasticAdIndexService.CreateIndexAsync();
+    //}
 
     private async Task SeedCountriesAsync()
     {
@@ -100,76 +95,76 @@ public class SeedTestDataService(
         await countryRepository.AddAsync([_chile, _spain]);
     }
 
-    private async Task SeedCategoriesAsync()
-    {
-        if (await categoryRepository.AnyAsync())
-        {
-            return;
-        }
+    //private async Task SeedCategoriesAsync()
+    //{
+    //    if (await categoryRepository.AnyAsync())
+    //    {
+    //        return;
+    //    }
 
-        _vehiclesCategory = new() { Name = "Vehicles" };
-        _realEstateCategory = new() { Name = "Real Estate" };
+    //    _vehiclesCategory = new() { Name = "Vehicles" };
+    //    _realEstateCategory = new() { Name = "Real Estate" };
 
-        await categoryRepository.AddAsync([_vehiclesCategory, _realEstateCategory]);
-    }
+    //    await categoryRepository.AddAsync([_vehiclesCategory, _realEstateCategory]);
+    //}
 
-    private async Task SeedFiltersAsync()
-    {
-        if (await filterRepository.AnyAsync())
-        {
-            return;
-        }
+    //private async Task SeedFiltersAsync()
+    //{
+    //    if (await filterRepository.AnyAsync())
+    //    {
+    //        return;
+    //    }
 
-        _brandFilter = new() { Name = "brand", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 1 };
-        _yearFilter = new() { Name = "year", CategoryId = _vehiclesCategory.Id, Type = FilterType.Numeric, Sort = FilterSort.FilterNameDesc, Order = 3 };
+    //    _brandFilter = new() { Name = "brand", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 1 };
+    //    _yearFilter = new() { Name = "year", CategoryId = _vehiclesCategory.Id, Type = FilterType.Numeric, Sort = FilterSort.FilterNameDesc, Order = 3 };
 
-        await filterRepository.AddAsync([_brandFilter, _yearFilter]);
+    //    await filterRepository.AddAsync([_brandFilter, _yearFilter]);
 
-        _modelFilter = new() { Name = "model", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 2, ParentId = _brandFilter.Id };
+    //    _modelFilter = new() { Name = "model", CategoryId = _vehiclesCategory.Id, Type = FilterType.Text, Sort = FilterSort.FilterNameAsc, Order = 2, ParentId = _brandFilter.Id };
 
-        await filterRepository.AddAsync(_modelFilter);
-    }
+    //    await filterRepository.AddAsync(_modelFilter);
+    //}
 
-    private async Task SeedCountryCategoriesAsync()
-    {
-        if (await countryCategoryRepository.AnyAsync())
-        {
-            return;
-        }
+    //private async Task SeedCountryCategoriesAsync()
+    //{
+    //    if (await countryCategoryRepository.AnyAsync())
+    //    {
+    //        return;
+    //    }
 
 
-        _chileVehiclesCountryCategory = new()
-        {
-            CountryId = _chile.Id,
-            CategoryId = _vehiclesCategory.Id,
-            Order = 1,
-            Filters = [_brandFilter, _modelFilter, _yearFilter]
-        };
+    //    _chileVehiclesCountryCategory = new()
+    //    {
+    //        CountryId = _chile.Id,
+    //        CategoryId = _vehiclesCategory.Id,
+    //        Order = 1,
+    //        Filters = [_brandFilter, _modelFilter, _yearFilter]
+    //    };
 
-        _chileRealEstateCountryCategory = new()
-        {
-            CountryId = _chile.Id,
-            CategoryId = _realEstateCategory.Id,
-            Order = 2,
-            Filters = []
-        };
+    //    _chileRealEstateCountryCategory = new()
+    //    {
+    //        CountryId = _chile.Id,
+    //        CategoryId = _realEstateCategory.Id,
+    //        Order = 2,
+    //        Filters = []
+    //    };
 
-        _spainVehiclesCountryCategory = new()
-        {
-            CountryId = _spain.Id,
-            CategoryId = _vehiclesCategory.Id,
-            Order = 1,
-            Filters = [_brandFilter, _modelFilter, _yearFilter]
-        };
+    //    _spainVehiclesCountryCategory = new()
+    //    {
+    //        CountryId = _spain.Id,
+    //        CategoryId = _vehiclesCategory.Id,
+    //        Order = 1,
+    //        Filters = [_brandFilter, _modelFilter, _yearFilter]
+    //    };
 
-        await countryCategoryRepository.AddAsync(
-            [
-                _chileVehiclesCountryCategory,
-                _chileRealEstateCountryCategory,
-                _spainVehiclesCountryCategory
-            ]
-        );
-    }
+    //    await countryCategoryRepository.AddAsync(
+    //        [
+    //            _chileVehiclesCountryCategory,
+    //            _chileRealEstateCountryCategory,
+    //            _spainVehiclesCountryCategory
+    //        ]
+    //    );
+    //}
 
     //private async Task SeedAdsAsync()
     //{
