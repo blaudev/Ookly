@@ -1,7 +1,7 @@
 ﻿namespace Ookly.Core.Entities.ListingEntity;
 
 public class ListingDetail(
-    string filterId,
+    int filterId,
     string? textValue = null,
     decimal? numericValue = null,
     bool? booleanValue = null) : Entity
@@ -32,7 +32,7 @@ public class ListingDetail(
 
     public Listing Ad { get; private set; } = default!;
 
-    public string FilterId { get; private set; } = filterId;
+    public int FilterId { get; private set; } = filterId;
     public Filter Filter { get; private set; } = default!;
 
     public string? TextValue { get; private set; } = textValue;

@@ -21,7 +21,7 @@ public class ElasticAdIndexService(ElasticClient client, IOptions<ElasticOptions
                     .Keyword(p => p.Name(n => n.CountryId))
                     .Keyword(p => p.Name(n => n.CategoryId))
                     .Nested<ListingDetail>(n => n
-                        .Name(n => n.Properties)
+                        .Name(n => n.Details)
                         .Properties(ps => ps
                             .Keyword(p => p.Name(n => n.FilterId))
                             .Keyword(p => p.Name(n => n.TextValue))

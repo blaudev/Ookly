@@ -25,7 +25,6 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICountryCategoryRepository, CountryCategoryRepository>();
 builder.Services.AddScoped<IFilterRepository, FilterRepository>();
-builder.Services.AddScoped<ICategoryFilterRepository, CategoryFilterRepository>();
 builder.Services.AddScoped<IListingRepository, AdRepository>();
 
 builder.Services.AddScoped<SeedTestDataService>();

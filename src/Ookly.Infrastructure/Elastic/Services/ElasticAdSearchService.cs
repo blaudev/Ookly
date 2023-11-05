@@ -45,17 +45,17 @@ public class ElasticAdSearchService(ElasticClient client) : IAdSearchService
         descriptor
             .Aggregations(a => a
                 .Nested(_aggregatePropertiesName, n => n
-                    .Path(p => p.Properties)
+                    .Path(p => p.Details)
                     .Aggregations(aa => aa
                         .Terms(_aggregateNamesName, t => t
-                            .Field(p => p.Properties.Suffix("filterId"))
+                            .Field(p => p.Details.Suffix("filterId"))
                             .Exclude(exclude)
                             .Aggregations(aa => aa
                                 .Terms(_aggregateTextValues, t => t
-                                    .Field(f => f.Properties.Suffix("textValue"))
+                                    .Field(f => f.Details.Suffix("textValue"))
                                 )
                                 .Terms(_aggregateNumericValues, t => t
-                                    .Field(f => f.Properties.Suffix("numericValue"))
+                                    .Field(f => f.Details.Suffix("numericValue"))
                                 )
                             )
                         )

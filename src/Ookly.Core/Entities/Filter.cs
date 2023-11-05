@@ -12,7 +12,7 @@ public class Filter : NamedEntity
     public int? ParentId { get; init; }
     public Filter? Parent { get; init; } = new();
 
-    public List<CategoryFilter> CategoryFilters { get; init; } = [];
+    public List<CountryCategory> CountryCategories { get; init; } = [];
 }
 
 public enum FilterType

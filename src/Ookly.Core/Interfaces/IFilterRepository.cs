@@ -6,4 +6,5 @@ namespace Ookly.Core.Interfaces;
 
 public interface IFilterRepository : IRepository<Filter>
 {
+    public Task<List<Filter>> ListByCountryCategoryIdNameAsync(int ciuntryCategoryId, CancellationToken cancellationToken = default);
 }

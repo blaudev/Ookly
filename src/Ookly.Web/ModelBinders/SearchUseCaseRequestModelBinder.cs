@@ -1,6 +1,4 @@
-﻿using Blau.Exceptions;
-
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using Ookly.Core.Interfaces;
 using Ookly.UseCases.SearchUseCase;
@@ -10,22 +8,24 @@ namespace Ookly.Web.ModelBinders;
 public class SearchUseCaseRequestModelBinder(
     ICountryRepository countryRepository,
     ICategoryRepository categoryRepository,
-    ICountryCategoryRepository countryCategoryRepository) : IModelBinder
+    ICountryCategoryRepository countryCategoryRepository,
+    IFilterRepository filterRepository) : IModelBinder
 {
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
-        var countryName = bindingContext.ValueProvider.GetValue("country").FirstValue ?? throw new ValidationException("country");
+        var countryName = bindingContext.GetFirstValue("country");
         var country = await countryRepository.FirstByNameAsync(countryName);
 
-        var categoryName = bindingContext.ValueProvider.GetValue("category").FirstValue ?? throw new ValidationException("country");
+        var categoryName = bindingContext.GetFirstValue("category");
         var category = await categoryRepository.FirstByNameAsync(categoryName);
 
         var countryCategory = await countryCategoryRepository.FirstByCountryIdAndCategoryIdAsync(country.Id, category.Id);
 
-        var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.Filter.Name).ToList();
-        var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
+        var filters = await filterRepository.ListByCountryCategoryIdNameAsync(countryCategory.Id);
+        var filterNames = filters.Select(f => f.Name).ToList();
+        var filterValues = GetFilterValues(filterNames, bindingContext);
 
         bindingContext.Result = ModelBindingResult.Success(new SearchUseCaseRequest { CountryId = countryName, CategoryId = categoryName, FilterValues = filterValues });
         await Task.CompletedTask;

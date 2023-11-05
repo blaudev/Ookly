@@ -1,4 +1,6 @@
-﻿namespace Ookly.Core.Entities;
+﻿using Ookly.Core.Entities.ListingEntity;
+
+namespace Ookly.Core.Entities;
 
 public class CountryCategory : Entity
 {
@@ -10,5 +12,6 @@ public class CountryCategory : Entity
 
     public int Order { get; init; }
 
-    public List<CategoryFilter> CategoryFilters { get; init; } = [];
+    public List<Filter> Filters { get; init; } = [];
+    public List<Listing> Listings { get; init; } = [];
 }

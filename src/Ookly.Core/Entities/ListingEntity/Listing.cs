@@ -60,7 +60,7 @@ public class Listing(
     public string Title { get; private set; } = title;
     public string? Description { get; private set; } = description!;
     public long Price { get; private set; } = price;
-    public List<ListingDetail> Properties { get; private set; } = [];
+    public List<ListingDetail> Details { get; private set; } = [];
 
     public void SetActive()
     {
@@ -74,12 +74,12 @@ public class Listing(
 
     public void AddProperty(ListingDetail property)
     {
-        Properties.Add(property);
+        Details.Add(property);
     }
 
     public void AddProperties(List<ListingDetail> properties)
     {
-        Properties.AddRange(properties);
+        Details.AddRange(properties);
     }
 
 }
