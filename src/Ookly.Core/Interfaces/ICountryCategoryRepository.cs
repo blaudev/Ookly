@@ -6,4 +6,5 @@ namespace Ookly.Core.Interfaces;
 
 public interface ICountryCategoryRepository : IRepository<CountryCategory>
 {
+    Task<CountryCategory> FirstByCountryIdAndCategoryIdAsync(int countryId, int categoryId);
 }

@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\..\blau\src\Blau\Blau.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\FilterEntity\" />
-  </ItemGroup>
-
 </Project>

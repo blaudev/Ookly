@@ -7,21 +7,22 @@ using Ookly.UseCases.SearchUseCase;
 
 namespace Ookly.Web.ModelBinders;
 
-public class SearchUseCaseRequestModelBinder(ICountryRepository countryRepository) : IModelBinder
+public class SearchUseCaseRequestModelBinder(
+    ICountryRepository countryRepository,
+    ICategoryRepository categoryRepository,
+    ICountryCategoryRepository countryCategoryRepository) : IModelBinder
 {
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         ArgumentNullException.ThrowIfNull(bindingContext);
 
         var countryName = bindingContext.ValueProvider.GetValue("country").FirstValue ?? throw new ValidationException("country");
-
+        var country = await countryRepository.FirstByNameAsync(countryName);
 
         var categoryName = bindingContext.ValueProvider.GetValue("category").FirstValue ?? throw new ValidationException("country");
+        var category = await categoryRepository.FirstByNameAsync(categoryName);
 
-        var country = await countryRepository.GetCountryWithCountryCategoriesAndFiltersAsync(0);
-
-        var countryCategory = country.CountryCategories.FirstOrDefault(x => x.Id == 0)
-            ?? throw new ValidationException(categoryName);
+        var countryCategory = await countryCategoryRepository.FirstByCountryIdAndCategoryIdAsync(country.Id, category.Id);
 
         var categoryFilterIds = countryCategory.CategoryFilters.Select(x => x.Filter.Name).ToList();
         var filterValues = GetFilterValues(categoryFilterIds, bindingContext);
