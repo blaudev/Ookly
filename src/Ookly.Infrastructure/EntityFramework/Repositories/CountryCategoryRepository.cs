@@ -10,6 +10,6 @@ public class CountryCategoryRepository(ApplicationContext context)
 {
     public async Task<CountryCategory> FirstByCountryIdAndCategoryIdAsync(int countryId, int categoryId)
     {
-        return await Context.CountryCategories.FirstAsync(q => q.CountryId == countryId && q.CategoryId == categoryId);
+        return await Set.FirstAsync(q => q.CountryId == countryId && q.CategoryId == categoryId);
     }
 }
